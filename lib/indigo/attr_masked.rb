@@ -20,7 +20,7 @@ module Indigo::AttrMasked
 
   # Generates attr_accessors that mask attributes transparently
   #
-  # Options (any other options you specify are passed to the maskor's mask 
+  # Options (any other options you specify are passed to the masker's mask 
   # methods)
   #
   #   :attribute        => The name of the referenced masked attribute. For example
@@ -39,10 +39,10 @@ module Indigo::AttrMasked
   #                        would generate attributes named 'email_masked' and 'password_masked' to store the
   #                        masked email. Defaults to ''.
   #
-  #   :key              => The maskion key. This option may not be required if you're using a custom maskor. If you pass
+  #   :key              => The maskion key. This option may not be required if you're using a custom masker. If you pass
   #                        a symbol representing an instance method then the :key option will be replaced with the result of the
-  #                        method before being passed to the maskor. Objects that respond to :call are evaluated as well (including procs).
-  #                        Any other key types will be passed directly to the maskor.
+  #                        method before being passed to the masker. Objects that respond to :call are evaluated as well (including procs).
+  #                        Any other key types will be passed directly to the masker.
   #
   #   :encode           => If set to true, attributes will be encoded as well as masked. This is useful if you're
   #                        planning on storing the masked attributes in a database. The default encoding is 'm' (base64),
@@ -60,9 +60,9 @@ module Indigo::AttrMasked
   #
   #   :load_method      => The load method name to call on the <tt>:marshaler</tt> object. Defaults to 'load'.
   #
-  #   :maskor        => The object to use for masking. Defaults to maskor.
+  #   :masker        => The object to use for masking. Defaults to Masker.
   #
-  #   :mask_method   => The mask method name to call on the <tt>:maskor</tt> object. Defaults to 'mask'.
+  #   :mask_method   => The mask method name to call on the <tt>:masker</tt> object. Defaults to 'mask'.
   #
   #   :if               => Attributes are only masked if this option evaluates to true. If you pass a symbol representing an instance
   #                        method then the result of the method will be evaluated. Any objects that respond to <tt>:call</tt> are evaluated as well.
@@ -108,7 +108,7 @@ module Indigo::AttrMasked
       :marshaler        => Marshal,
       :dump_method      => 'dump',
       :load_method      => 'load',
-      :maskor           => Indigo::AttrMasked::Maskor,
+      :masker           => Indigo::AttrMasked::Masker,
       :mask_method      => 'mask',
     }.merge!(attr_masked_options).merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
 
@@ -137,7 +137,6 @@ module Indigo::AttrMasked
       masked_attributes[attribute.to_sym] = options.merge(:attribute => masked_attribute_name)
     end
   end
-  alias_method :attr_maskor, :attr_masked
 
   # Default options to use with calls to <tt>attr_masked</tt>
   # XXX:Keep
@@ -178,8 +177,8 @@ module Indigo::AttrMasked
     # if options[:if] && !options[:unless] && !value.nil? && !(value.is_a?(String) && value.empty?)
     if options[:if] && !options[:unless]
       value = options[:marshal] ? options[:marshaler].send(options[:dump_method], value) : value.to_s
-      # masked_value = options[:maskor].send(options[:mask_method], options.merge!(:value => value))
-      masked_value = options[:maskor].send(options[:mask_method], options.merge!(:value => value))
+      # masked_value = options[:masker].send(options[:mask_method], options.merge!(:value => value))
+      masked_value = options[:masker].send(options[:mask_method], options.merge!(:value => value))
       masked_value
     else
       value
@@ -219,9 +218,9 @@ module Indigo::AttrMasked
     end
   end
 
-  class Maskor
+  class Masker
 
-    # This default maskor simply replaces any value with a fixed string.
+    # This default masker simply replaces any value with a fixed string.
     #
     def self.mask opts
       '(redacted)'
