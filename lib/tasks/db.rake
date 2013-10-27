@@ -12,10 +12,18 @@ namespace :db do
   #
   # URL: 
   # http://stackoverflow.com/questions/14163938/activerecordconnectionnotestablished-within-a-rake-task
+  #
   task :mask => :environment do
 
     unless Kernel.const_defined? :ActiveRecord
       warn 'ActiveRecord undefined. Nothing to do!'
+      exit 1
+    end
+
+    # Do not want production environment to be masked!
+    #
+    if Rails.env.production?
+      Rails.logger.warn "Why are you masking me?! :("
       exit 1
     end
 
@@ -25,7 +33,7 @@ namespace :db do
     ActiveRecord::Base.descendants.each do |klass|
       if klass.table_exists?
 
-        # include mixin
+        # include mixin for this class
         klass.class_eval do
           # extend Indigo::AttrMasked::DangerousClassMethods
           include Indigo::AttrMasked::DangerousInstanceMethods
