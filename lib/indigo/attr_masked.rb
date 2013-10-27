@@ -222,6 +222,9 @@ module Indigo::AttrMasked
 
     # This default masker simply replaces any value with a fixed string.
     #
+    # +opts+ is a Hash with the key :value that gives you the current attribute 
+    # value.
+    #
     def self.mask opts
       '(redacted)'
     end
