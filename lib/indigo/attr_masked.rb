@@ -3,7 +3,7 @@
 # (c) 2013 Ribose, Inc. as unpublished work.
 #
 
-# Adds attr_accessors that mask and unmask an object's attributes
+# Adds attr_accessors that mask an object's attributes
 module Indigo::AttrMasked
   autoload :Version, 'attr_masked/version'
 
@@ -11,16 +11,17 @@ module Indigo::AttrMasked
   def self.extended(base) # :nodoc:
     base.class_eval do
 
-      # Only include instance methods during the Rake task!
-      # include InstanceMethods
+      # Only include the dangerous instance methods during the Rake task!
+      include InstanceMethods
       attr_writer :attr_masked_options
       @attr_masked_options, @masked_attributes = {}, {}
     end
   end
 
-  # Generates attr_accessors that mask and unmask attributes transparently
+  # Generates attr_accessors that mask attributes transparently
   #
-  # Options (any other options you specify are passed to the maskor's mask and unmask methods)
+  # Options (any other options you specify are passed to the maskor's mask 
+  # methods)
   #
   #   :attribute        => The name of the referenced masked attribute. For example
   #                        <tt>attr_accessor :email, :attribute => :ee</tt> would generate an
@@ -49,8 +50,6 @@ module Indigo::AttrMasked
   #                        just 'true'. See http://www.ruby-doc.org/core/classes/Array.html#M002245 for more encoding directives.
   #                        Defaults to false unless you're using it with ActiveRecord, DataMapper, or Sequel.
   #
-  #   :default_encoding => Defaults to 'm' (base64).
-  #
   #   :marshal          => If set to true, attributes will be marshaled as well as masked. This is useful if you're planning
   #                        on masking something other than a string. Defaults to false unless you're using it with ActiveRecord
   #                        or DataMapper.
@@ -65,8 +64,6 @@ module Indigo::AttrMasked
   #
   #   :mask_method   => The mask method name to call on the <tt>:maskor</tt> object. Defaults to 'mask'.
   #
-  #   :unmask_method   => The unmask method name to call on the <tt>:maskor</tt> object. Defaults to 'unmask'.
-  #
   #   :if               => Attributes are only masked if this option evaluates to true. If you pass a symbol representing an instance
   #                        method then the result of the method will be evaluated. Any objects that respond to <tt>:call</tt> are evaluated as well.
   #                        Defaults to true.
@@ -74,12 +71,6 @@ module Indigo::AttrMasked
   #   :unless           => Attributes are only masked if this option evaluates to false. If you pass a symbol representing an instance
   #                        method then the result of the method will be evaluated. Any objects that respond to <tt>:call</tt> are evaluated as well.
   #                        Defaults to false.
-  #
-  #   :mode             => Selects maskion mode for attribute: choose <tt>:single_iv_and_salt</tt> for compatibility
-  #                        with the old attr_masked API: the default IV and salt of the underlying maskor object
-  #                        is used; <tt>:per_attribute_iv_and_salt</tt> uses a per-attribute IV and salt attribute and
-  #                        is the recommended mode for new deployments.
-  #                        Defaults to <tt>:single_iv_and_salt</tt>.
   #
   # You can specify your own default options
   #
@@ -110,23 +101,16 @@ module Indigo::AttrMasked
   #   See README for more examples
   def attr_masked(*attributes)
     options = {
-      :prefix           => 'masked_',
-      :suffix           => '',
       :if               => true,
       :unless           => false,
       :encode           => false,
-      :default_encoding => 'm',
       :marshal          => false,
       :marshaler        => Marshal,
       :dump_method      => 'dump',
       :load_method      => 'load',
-      :maskor        => maskor,
-      :mask_method   => 'mask',
-      :unmask_method   => 'unmask',
-      :mode             => :single_iv_and_salt
+      :maskor           => Indigo::AttrMasked::Maskor,
+      :mask_method      => 'mask',
     }.merge!(attr_masked_options).merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
-
-    options[:encode] = options[:default_encoding] if options[:encode] == true
 
     attributes.each do |attribute|
       masked_attribute_name = (options[:attribute] ? options[:attribute] : [options[:prefix], attribute, options[:suffix]].join).to_sym
@@ -135,37 +119,20 @@ module Indigo::AttrMasked
       attr_reader masked_attribute_name unless instance_methods_as_symbols.include?(masked_attribute_name)
       attr_writer masked_attribute_name unless instance_methods_as_symbols.include?(:"#{masked_attribute_name}=")
 
-      if options[:mode] == :per_attribute_iv_and_salt
-        attr_reader (masked_attribute_name.to_s + "_iv").to_sym unless instance_methods_as_symbols.include?((masked_attribute_name.to_s + "_iv").to_sym )
-        attr_writer (masked_attribute_name.to_s + "_iv").to_sym unless instance_methods_as_symbols.include?((masked_attribute_name.to_s + "_iv").to_sym )
+      # define_method(attribute) do
+      #   instance_variable_get("@#{attribute}") ||
+      #     instance_variable_set("@#{attribute}", unmask(attribute, send(masked_attribute_name)))
+      # end
 
-        attr_reader (masked_attribute_name.to_s + "_salt").to_sym unless instance_methods_as_symbols.include?((masked_attribute_name.to_s + "_salt").to_sym )
-        attr_writer (masked_attribute_name.to_s + "_salt").to_sym unless instance_methods_as_symbols.include?((masked_attribute_name.to_s + "_salt").to_sym )
-      end
+      # define_method("#{attribute}=") do |value|
+      #   send("#{masked_attribute_name}=", mask(attribute, value))
+      #   instance_variable_set("@#{attribute}", value)
+      # end
 
-      define_method(attribute) do
-        if options[:mode] == :per_attribute_iv_and_salt
-          load_iv_for_attribute(attribute,masked_attribute_name, options[:algorithm])
-          load_salt_for_attribute(attribute,masked_attribute_name)
-        end
-
-        instance_variable_get("@#{attribute}") || instance_variable_set("@#{attribute}", unmask(attribute, send(masked_attribute_name)))
-      end
-
-      define_method("#{attribute}=") do |value|
-        if options[:mode] == :per_attribute_iv_and_salt
-          load_iv_for_attribute(attribute, masked_attribute_name, options[:algorithm])
-          load_salt_for_attribute(attribute, masked_attribute_name)
-        end
-
-        send("#{masked_attribute_name}=", mask(attribute, value))
-        instance_variable_set("@#{attribute}", value)
-      end
-
-      define_method("#{attribute}?") do
-        value = send(attribute)
-        value.respond_to?(:empty?) ? !value.empty? : !!value
-      end
+      # define_method("#{attribute}?") do
+      #   value = send(attribute)
+      #   value.respond_to?(:empty?) ? !value.empty? : !!value
+      # end
 
       masked_attributes[attribute.to_sym] = options.merge(:attribute => masked_attribute_name)
     end
@@ -173,6 +140,7 @@ module Indigo::AttrMasked
   alias_method :attr_maskor, :attr_masked
 
   # Default options to use with calls to <tt>attr_masked</tt>
+  # XXX:Keep
   #
   # It will inherit existing options from its superclass
   def attr_masked_options
@@ -180,6 +148,7 @@ module Indigo::AttrMasked
   end
 
   # Checks if an attribute is configured with <tt>attr_masked</tt>
+  # XXX:Keep
   #
   # Example
   #
@@ -194,33 +163,8 @@ module Indigo::AttrMasked
     masked_attributes.has_key?(attribute.to_sym)
   end
 
-  # unmasks a value for the attribute specified
-  #
-  # Example
-  #
-  #   class User
-  #     attr_masked :email
-  #   end
-  #
-  #   email = User.unmask(:email, 'SOME_masked_EMAIL_STRING')
-  def unmask(attribute, masked_value, options = {})
-    options = masked_attributes[attribute.to_sym].merge(options)
-    if options[:if] && !options[:unless] && !masked_value.nil? && !(masked_value.is_a?(String) && masked_value.empty?)
-      masked_value = masked_value.unpack(options[:encode]).first if options[:encode]
-      value = options[:maskor].send(options[:unmask_method], options.merge!(:value => masked_value))
-      if options[:marshal]
-        value = options[:marshaler].send(options[:load_method], value)
-      elsif defined?(Encoding)
-        encoding = Encoding.default_internal || Encoding.default_external
-        value = value.force_encoding(encoding.name)
-      end
-      value
-    else
-      masked_value
-    end
-  end
-
   # masks a value for the attribute specified
+  # XXX:modify
   #
   # Example
   #
@@ -231,10 +175,11 @@ module Indigo::AttrMasked
   #   masked_email = User.mask(:email, 'test@example.com')
   def mask(attribute, value, options = {})
     options = masked_attributes[attribute.to_sym].merge(options)
-    if options[:if] && !options[:unless] && !value.nil? && !(value.is_a?(String) && value.empty?)
+    # if options[:if] && !options[:unless] && !value.nil? && !(value.is_a?(String) && value.empty?)
+    if options[:if] && !options[:unless]
       value = options[:marshal] ? options[:marshaler].send(options[:dump_method], value) : value.to_s
+      # masked_value = options[:maskor].send(options[:mask_method], options.merge!(:value => value))
       masked_value = options[:maskor].send(options[:mask_method], options.merge!(:value => value))
-      masked_value = [masked_value].pack(options[:encode]) if options[:encode]
       masked_value
     else
       value
@@ -243,6 +188,7 @@ module Indigo::AttrMasked
 
   # Contains a hash of masked attributes with virtual attribute names as keys
   # and their corresponding options as values
+  # XXX:Keep
   #
   # Example
   #
@@ -255,7 +201,7 @@ module Indigo::AttrMasked
     @masked_attributes ||= superclass.masked_attributes.dup
   end
 
-  # Forwards calls to :mask_#{attribute} or :unmask_#{attribute} to the corresponding mask or unmask method
+  # Forwards calls to :mask_#{attribute} to the corresponding mask method
   # if attribute was configured with attr_masked
   #
   # Example
@@ -266,32 +212,54 @@ module Indigo::AttrMasked
   #
   #   User.mask_email('SOME_masked_EMAIL_STRING')
   def method_missing(method, *arguments, &block)
-    if method.to_s =~ /^((en|de)crypt)_(.+)$/ && attr_masked?($3)
-      send($1, $3, *arguments)
+    if method.to_s =~ /^mask_(.+)$/ && attr_masked?($1)
+      send(:mask, $1, *arguments)
     else
       super
     end
   end
 
-  module InstanceMethods
-    # unmasks a value for the attribute specified using options evaluated in the current object's scope
+  class Maskor
+
+    # This default maskor simply replaces any value with a fixed string.
     #
-    # Example
-    #
-    #  class User
-    #    attr_accessor :secret_key
-    #    attr_masked :email, :key => :secret_key
-    #
-    #    def initialize(secret_key)
-    #      self.secret_key = secret_key
-    #    end
-    #  end
-    #
-    #  @user = User.new('some-secret-key')
-    #  @user.unmask(:email, 'SOME_masked_EMAIL_STRING')
-    def unmask(attribute, masked_value)
-      self.class.unmask(attribute, masked_value, evaluated_attr_masked_options_for(attribute))
+    def self.mask opts
+      '(redacted)'
     end
+  end
+
+  # Only include these methods in the rake task, and only run it in QA, cuz 
+  # they're DANGEROUS!
+  #
+  module DangerousInstanceMethods
+
+    # For each masked attribute, mask it, and save it!
+    #
+    def mask!
+      return if self.class.masked_attributes.length < 1
+
+      sql_snippet = self.class.masked_attributes.map do |masked_attr|
+        masked_attr[0]
+      end.inject({}) do |acc, attr_name|
+
+        # build a map of { attr_name => masked_value }
+        masked_value = self.mask(attr_name)
+        acc.merge(
+          attr_name => masked_value
+        )
+      end.inject([]) do |acc, (attr_name, masked_value)|
+        acc << "#{attr_name}=#{ActiveRecord::Base.sanitize(masked_value)}"
+      end.join(', ')
+
+      sql = <<-EOQ
+        UPDATE #{self.class.table_name} SET #{sql_snippet} WHERE id=#{self.id}
+      EOQ
+
+      ActiveRecord::Base.connection.execute sql
+    end
+  end
+
+  module InstanceMethods
 
     # masks a value for the attribute specified using options evaluated in the current object's scope
     #
@@ -308,18 +276,23 @@ module Indigo::AttrMasked
     #
     #  @user = User.new('some-secret-key')
     #  @user.mask(:email, 'test@example.com')
-    def mask(attribute, value)
+    def mask(attribute, value=nil)
+      value = self.send(attribute) if value.nil?
       self.class.mask(attribute, value, evaluated_attr_masked_options_for(attribute))
     end
 
     protected
 
       # Returns attr_masked options evaluated in the current object's scope for the attribute specified
+      # XXX:Keep
       def evaluated_attr_masked_options_for(attribute)
-        self.class.masked_attributes[attribute.to_sym].inject({}) { |hash, (option, value)| hash.merge!(option => evaluate_attr_masked_option(value)) }
+        self.class.masked_attributes[attribute.to_sym].inject({}) do |hash, (option, value)|
+          hash.merge!(option => evaluate_attr_masked_option(value))
+        end
       end
 
       # Evaluates symbol (method reference) or proc (responds to call) options
+      # XXX:Keep
       #
       # If the option is not a symbol or proc then the original option is returned
       def evaluate_attr_masked_option(option)
@@ -330,25 +303,6 @@ module Indigo::AttrMasked
         else
           option
         end
-      end
-
-      def load_iv_for_attribute (attribute, masked_attribute_name, algorithm)
-        iv = send("#{masked_attribute_name.to_s + "_iv"}")
-          if(iv == nil)
-            begin
-              algorithm = algorithm || "aes-256-cbc"
-              algo = OpenSSL::Cipher::Cipher.new(algorithm)
-              iv = [algo.random_iv].pack("m")
-              send("#{masked_attribute_name.to_s + "_iv"}=", iv)
-            rescue RuntimeError
-            end
-          end
-        self.class.masked_attributes[attribute.to_sym] = self.class.masked_attributes[attribute.to_sym].merge(:iv => iv.unpack("m").first) if (iv && !iv.empty?)
-      end
-
-      def load_salt_for_attribute(attribute, masked_attribute_name)
-        salt = send("#{masked_attribute_name.to_s + "_salt"}") || send("#{masked_attribute_name.to_s + "_salt"}=", Digest::SHA256.hexdigest((Time.now.to_i * rand(1000)).to_s)[0..15])
-        self.class.masked_attributes[attribute.to_sym] = self.class.masked_attributes[attribute.to_sym].merge(:salt => salt)
       end
   end
 end

@@ -27,16 +27,26 @@ namespace :db do
 
         # include mixin
         klass.class_eval do
-          include Indigo::AttrMasked::InstanceMethods
+          # extend Indigo::AttrMasked::DangerousClassMethods
+          include Indigo::AttrMasked::DangerousInstanceMethods
         end
 
         printf "Masking #{klass}... "
 
-        klass.each do |model|
-          model.mask!
+        if klass.count < 1 || klass.masked_attributes.length < 1
+          puts "Nothing to do!"
+        else
+
+          klass.all.each do |model|
+            printf "\n --> masking #{model.id} - #{model}... "
+            model.mask!
+            printf "OK"
+          end
+
+          puts " ==> done!"
         end
-        printf "done\n"
       end
     end
+    puts "All done!"
   end
 end
