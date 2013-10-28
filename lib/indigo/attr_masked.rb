@@ -104,6 +104,7 @@ module Indigo::AttrMasked
       :if               => true,
       :unless           => false,
       :encode           => false,
+      :column_name      => nil,
       :marshal          => false,
       :marshaler        => Marshal,
       :dump_method      => 'dump',
@@ -241,16 +242,20 @@ module Indigo::AttrMasked
       return if self.class.masked_attributes.length < 1
 
       sql_snippet = self.class.masked_attributes.map do |masked_attr|
+        # puts masked_attr
         masked_attr[0]
-      end.inject({}) do |acc, attr_name|
+        attr_name, column_name = masked_attr[0], (masked_attr[1][:column_name] || masked_attr[0])
+      end.inject({}) do |acc, (attr_name, column_name)|
 
         # build a map of { attr_name => masked_value }
         masked_value = self.mask(attr_name)
         acc.merge(
-          attr_name => masked_value
+          [attr_name, column_name] => masked_value
         )
-      end.inject([]) do |acc, (attr_name, masked_value)|
-        acc << "#{attr_name}=#{ActiveRecord::Base.sanitize(masked_value)}"
+      end.inject([]) do |acc, ((attr_name, column_name), masked_value)|
+        self.send("#{attr_name}=", masked_value)
+        final_masked_value = self.send(column_name)
+        acc << "#{column_name}=#{ActiveRecord::Base.sanitize(final_masked_value)}"
       end.join(', ')
 
       sql = <<-EOQ
