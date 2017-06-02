@@ -1,0 +1,71 @@
+= attr_masker
+:source-highlighter: pygments
+:pygments-style: native
+:pygments-linenums-mode: inline
+
+image:https://img.shields.io/travis/riboseinc/attr_masker/master.svg["Build Status", link="https://travis-ci.org/riboseinc/attr_masker"]
+
+Mask ActiveRecord data with ease!
+
+== Installation
+
+Add attr_masker to your gemfile:
+
+[source,ruby]
+----
+  gem "attr_masker", github: "riboseinc/attr_masker"
+----
+
+
+Then install the gem:
+
+[source,sh]
+----
+  bundle install
+----
+
+== Usage
+
+If you're using an ORM like `ActiveRecord`, `DataMapper`, or `Sequel`, using
+`attr_masker` is easy:
+
+[source,ruby]
+----
+  class User
+    attr_masker :email, :first_name, :last_name
+  end
+----
+
+WARNING: Data are destructively overwritten.
+Run `rake db:mask` with care!
+
+
+Then, when you want to mask the data (which would be *destructively*
+overwritten), in non-production `Rails.env`, run the Rake task:
+
+[source,sh]
+----
+  bundle exec rake db:mask
+----
+
+It'll then mask the attributes in your database, given that `Rails.env` is _not_
+`production`.
+
+.Roadmap TODOs
+- documentation
+- spec tests
+- Make the `Rails.env` (in which `db:mask` could be run) configurable
+** maybe by passing `ENV` vars
+- more masking options!
+** `Proc` as parameter
+** default scrambling algorithms?
+** structured text preserving algorithms
+*** _e.g._, keeping an HTML snippet valid HTML, but with masked inner text
+** structured *Object* preserving algorithms
+*** _i.e._ generalization of the above HTML scenario
+- I18n of the default `"(redacted)"` phrase
+- …
+
+== Acknowledgements
+
+https://github.com/attr-encrypted/attr_encrypted[attr_encrypted] for the initial code structure

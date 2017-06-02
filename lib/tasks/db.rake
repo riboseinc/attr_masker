@@ -1,7 +1,4 @@
 # -*- encoding: utf-8 -*-
-# Confidential and proprietary trade secret material of Ribose, Inc.
-# (c) 2013 Ribose, Inc. as unpublished work.
-#
 
 namespace :db do
   desc 'Mask every DB record according to rules set up in the respective ActiveRecord'
@@ -35,13 +32,13 @@ namespace :db do
 
         # include mixin for this class
         klass.class_eval do
-          # extend Indigo::AttrMasked::DangerousClassMethods
-          include Indigo::AttrMasked::DangerousInstanceMethods
+	  # extend AttrMasker::DangerousClassMethods
+          include AttrMasker::DangerousInstanceMethods
         end
 
         printf "Masking #{klass}... "
 
-        if klass.count < 1 || klass.masked_attributes.length < 1
+        if klass.count < 1 || klass.masker_attributes.length < 1
           puts "Nothing to do!"
         else
 

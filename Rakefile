@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
-# Confidential and proprietary trade secret material of Ribose, Inc.
-# (c) 2013 Ribose, Inc. as unpublished work.
+# (c) 2017 Ribose Inc.
 #
 
 # require 'rake'
@@ -10,10 +9,10 @@
 require 'bundler/gem_tasks'
 load 'tasks/db.rake'
 
-# desc 'Generate documentation for the attr_masked gem.'
+# desc 'Generate documentation for the attr_masker gem.'
 # Rake::RDocTask.new(:rdoc) do |rdoc|
 #   rdoc.rdoc_dir = 'rdoc'
-#   rdoc.title    = 'attr_masked'
+#   rdoc.title    = 'attr_masker'
 #   rdoc.options << '--line-numbers' << '--inline-source'
 #   rdoc.rdoc_files.include('README*')
 #   rdoc.rdoc_files.include('lib/**/*.rb')

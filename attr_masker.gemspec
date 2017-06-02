@@ -1,19 +1,17 @@
 # -*- encoding: utf-8 -*-
-# Confidential and proprietary trade secret material of Ribose, Inc.
-# (c) 2013 Ribose, Inc. as unpublished work.
-#
+# (c) 2017 Ribose Inc.
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'indigo/attr_masked/version'
+require 'attr_masker/version'
 
 Gem::Specification.new do |gem|
-  gem.name              = 'indigo-attr_masked'
-  gem.version           = Indigo::AttrMasked::Version.string
-  gem.authors           = ['Ribose, Inc.']
-  gem.email             = ['info@ribose.com']
+  gem.name              = 'attr_masker'
+  gem.version           = AttrMasker::Version.string
+  gem.authors           = ['Ribose Inc.']
+  gem.email             = ['open.source@ribose.com']
   gem.homepage          = ''
-  gem.summary           = 'Masking attributes, the Indigo way'
+  gem.summary           = 'Masking attributes'
   gem.description       = <<EOF
 It is desired to mask certain attributes of certain models by modifying the 
 database.
@@ -24,6 +22,6 @@ EOF
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency('rails', '>= 3.0.0')
-  gem.add_dependency('rspec', '>= 2.0')
+  gem.add_dependency('rails', '>= 4.0.0')
+  gem.add_dependency('rspec', '>= 3.0')
 end

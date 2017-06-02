@@ -1,20 +1,19 @@
 # -*- encoding: utf-8 -*-
-# Confidential and proprietary trade secret material of Ribose, Inc.
-# (c) 2013 Ribose, Inc. as unpublished work.
+# (c) 2017 Ribose Inc.
 #
 
 # Adds attr_accessors that mask an object's attributes
-module Indigo::AttrMasked
-  autoload :Version, 'attr_masked/version'
+module AttrMasker
+  autoload :Version, 'attr_masker/version'
 
-  require 'indigo/attr_masked/railtie' if defined?(Rails)
+  require 'attr_masker/railtie' if defined?(Rails)
   def self.extended(base) # :nodoc:
     base.class_eval do
 
       # Only include the dangerous instance methods during the Rake task!
       include InstanceMethods
-      attr_writer :attr_masked_options
-      @attr_masked_options, @masked_attributes = {}, {}
+      attr_writer :attr_masker_options
+      @attr_masker_options, @masker_attributes = {}, {}
     end
   end
 
@@ -23,34 +22,34 @@ module Indigo::AttrMasked
   # Options (any other options you specify are passed to the masker's mask 
   # methods)
   #
-  #   :attribute        => The name of the referenced masked attribute. For example
+  #   :attribute        => The name of the referenced masker attribute. For example
   #                        <tt>attr_accessor :email, :attribute => :ee</tt> would generate an
-  #                        attribute named 'ee' to store the masked email. This is useful when defining
+  #                        attribute named 'ee' to store the masker email. This is useful when defining
   #                        one attribute to mask at a time or when the :prefix and :suffix options
   #                        aren't enough. Defaults to nil.
   #
-  #   :prefix           => A prefix used to generate the name of the referenced masked attributes.
+  #   :prefix           => A prefix used to generate the name of the referenced masker attributes.
   #                        For example <tt>attr_accessor :email, :password, :prefix => 'crypted_'</tt> would
   #                        generate attributes named 'crypted_email' and 'crypted_password' to store the
-  #                        masked email and password. Defaults to 'masked_'.
+  #                        masker email and password. Defaults to 'masker_'.
   #
-  #   :suffix           => A suffix used to generate the name of the referenced masked attributes.
-  #                        For example <tt>attr_accessor :email, :password, :prefix => '', :suffix => '_masked'</tt>
-  #                        would generate attributes named 'email_masked' and 'password_masked' to store the
-  #                        masked email. Defaults to ''.
+  #   :suffix           => A suffix used to generate the name of the referenced masker attributes.
+  #                        For example <tt>attr_accessor :email, :password, :prefix => '', :suffix => '_masker'</tt>
+  #                        would generate attributes named 'email_masker' and 'password_masker' to store the
+  #                        masker email. Defaults to ''.
   #
   #   :key              => The maskion key. This option may not be required if you're using a custom masker. If you pass
   #                        a symbol representing an instance method then the :key option will be replaced with the result of the
   #                        method before being passed to the masker. Objects that respond to :call are evaluated as well (including procs).
   #                        Any other key types will be passed directly to the masker.
   #
-  #   :encode           => If set to true, attributes will be encoded as well as masked. This is useful if you're
-  #                        planning on storing the masked attributes in a database. The default encoding is 'm' (base64),
+  #   :encode           => If set to true, attributes will be encoded as well as masker. This is useful if you're
+  #                        planning on storing the masker attributes in a database. The default encoding is 'm' (base64),
   #                        however this can be overwritten by setting the :encode option to some other encoding string instead of
   #                        just 'true'. See http://www.ruby-doc.org/core/classes/Array.html#M002245 for more encoding directives.
   #                        Defaults to false unless you're using it with ActiveRecord, DataMapper, or Sequel.
   #
-  #   :marshal          => If set to true, attributes will be marshaled as well as masked. This is useful if you're planning
+  #   :marshal          => If set to true, attributes will be marshaled as well as masker. This is useful if you're planning
   #                        on masking something other than a string. Defaults to false unless you're using it with ActiveRecord
   #                        or DataMapper.
   #
@@ -64,11 +63,11 @@ module Indigo::AttrMasked
   #
   #   :mask_method   => The mask method name to call on the <tt>:masker</tt> object. Defaults to 'mask'.
   #
-  #   :if               => Attributes are only masked if this option evaluates to true. If you pass a symbol representing an instance
+  #   :if               => Attributes are only masker if this option evaluates to true. If you pass a symbol representing an instance
   #                        method then the result of the method will be evaluated. Any objects that respond to <tt>:call</tt> are evaluated as well.
   #                        Defaults to true.
   #
-  #   :unless           => Attributes are only masked if this option evaluates to false. If you pass a symbol representing an instance
+  #   :unless           => Attributes are only masker if this option evaluates to false. If you pass a symbol representing an instance
   #                        method then the result of the method will be evaluated. Any objects that respond to <tt>:call</tt> are evaluated as well.
   #                        Defaults to false.
   #
@@ -76,30 +75,30 @@ module Indigo::AttrMasked
   #
   #   class User
   #     # now all attributes will be encoded and marshaled by default
-  #     attr_masked_options.merge!(:encode => true, :marshal => true, :some_other_option => true)
-  #     attr_masked :configuration, :key => 'my secret key'
+  #     attr_masker_options.merge!(:encode => true, :marshal => true, :some_other_option => true)
+  #     attr_masker :configuration, :key => 'my secret key'
   #   end
   #
   #
   # Example
   #
   #   class User
-  #     attr_masked :email, :credit_card, :key => 'some secret key'
-  #     attr_masked :configuration, :key => 'some other secret key', :marshal => true
+  #     attr_masker :email, :credit_card, :key => 'some secret key'
+  #     attr_masker :configuration, :key => 'some other secret key', :marshal => true
   #   end
   #
   #   @user = User.new
-  #   @user.masked_email # nil
+  #   @user.masker_email # nil
   #   @user.email? # false
   #   @user.email = 'test@example.com'
   #   @user.email? # true
-  #   @user.masked_email # returns the masked version of 'test@example.com'
+  #   @user.masker_email # returns the masker version of 'test@example.com'
   #
   #   @user.configuration = { :time_zone => 'UTC' }
-  #   @user.masked_configuration # returns the masked version of configuration
+  #   @user.masker_configuration # returns the masker version of configuration
   #
   #   See README for more examples
-  def attr_masked(*attributes)
+  def attr_masker(*attributes)
     options = {
       :if               => true,
       :unless           => false,
@@ -109,24 +108,24 @@ module Indigo::AttrMasked
       :marshaler        => Marshal,
       :dump_method      => 'dump',
       :load_method      => 'load',
-      :masker           => Indigo::AttrMasked::Masker,
+      :masker           => AttrMasker::Masker,
       :mask_method      => 'mask',
-    }.merge!(attr_masked_options).merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
+    }.merge!(attr_masker_options).merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
 
     attributes.each do |attribute|
-      masked_attribute_name = (options[:attribute] ? options[:attribute] : [options[:prefix], attribute, options[:suffix]].join).to_sym
+      masker_attribute_name = (options[:attribute] ? options[:attribute] : [options[:prefix], attribute, options[:suffix]].join).to_sym
 
       instance_methods_as_symbols = instance_methods.collect { |method| method.to_sym }
-      attr_reader masked_attribute_name unless instance_methods_as_symbols.include?(masked_attribute_name)
-      attr_writer masked_attribute_name unless instance_methods_as_symbols.include?(:"#{masked_attribute_name}=")
+      attr_reader masker_attribute_name unless instance_methods_as_symbols.include?(masker_attribute_name)
+      attr_writer masker_attribute_name unless instance_methods_as_symbols.include?(:"#{masker_attribute_name}=")
 
       # define_method(attribute) do
       #   instance_variable_get("@#{attribute}") ||
-      #     instance_variable_set("@#{attribute}", unmask(attribute, send(masked_attribute_name)))
+      #     instance_variable_set("@#{attribute}", unmask(attribute, send(masker_attribute_name)))
       # end
 
       # define_method("#{attribute}=") do |value|
-      #   send("#{masked_attribute_name}=", mask(attribute, value))
+      #   send("#{masker_attribute_name}=", mask(attribute, value))
       #   instance_variable_set("@#{attribute}", value)
       # end
 
@@ -135,32 +134,32 @@ module Indigo::AttrMasked
       #   value.respond_to?(:empty?) ? !value.empty? : !!value
       # end
 
-      masked_attributes[attribute.to_sym] = options.merge(:attribute => masked_attribute_name)
+      masker_attributes[attribute.to_sym] = options.merge(:attribute => masker_attribute_name)
     end
   end
 
-  # Default options to use with calls to <tt>attr_masked</tt>
+  # Default options to use with calls to <tt>attr_masker</tt>
   # XXX:Keep
   #
   # It will inherit existing options from its superclass
-  def attr_masked_options
-    @attr_masked_options ||= superclass.attr_masked_options.dup
+  def attr_masker_options
+    @attr_masker_options ||= superclass.attr_masker_options.dup
   end
 
-  # Checks if an attribute is configured with <tt>attr_masked</tt>
+  # Checks if an attribute is configured with <tt>attr_masker</tt>
   # XXX:Keep
   #
   # Example
   #
   #   class User
   #     attr_accessor :name
-  #     attr_masked :email
+  #     attr_masker :email
   #   end
   #
-  #   User.attr_masked?(:name)  # false
-  #   User.attr_masked?(:email) # true
-  def attr_masked?(attribute)
-    masked_attributes.has_key?(attribute.to_sym)
+  #   User.attr_masker?(:name)  # false
+  #   User.attr_masker?(:email) # true
+  def attr_masker?(attribute)
+    masker_attributes.has_key?(attribute.to_sym)
   end
 
   # masks a value for the attribute specified
@@ -169,50 +168,50 @@ module Indigo::AttrMasked
   # Example
   #
   #   class User
-  #     attr_masked :email
+  #     attr_masker :email
   #   end
   #
-  #   masked_email = User.mask(:email, 'test@example.com')
+  #   masker_email = User.mask(:email, 'test@example.com')
   def mask(attribute, value, options = {})
-    options = masked_attributes[attribute.to_sym].merge(options)
+    options = masker_attributes[attribute.to_sym].merge(options)
     # if options[:if] && !options[:unless] && !value.nil? && !(value.is_a?(String) && value.empty?)
     if options[:if] && !options[:unless]
       value = options[:marshal] ? options[:marshaler].send(options[:dump_method], value) : value.to_s
-      # masked_value = options[:masker].send(options[:mask_method], options.merge!(:value => value))
-      masked_value = options[:masker].send(options[:mask_method], options.merge!(:value => value))
-      masked_value
+      # masker_value = options[:masker].send(options[:mask_method], options.merge!(:value => value))
+      masker_value = options[:masker].send(options[:mask_method], options.merge!(:value => value))
+      masker_value
     else
       value
     end
   end
 
-  # Contains a hash of masked attributes with virtual attribute names as keys
+  # Contains a hash of masker attributes with virtual attribute names as keys
   # and their corresponding options as values
   # XXX:Keep
   #
   # Example
   #
   #   class User
-  #     attr_masked :email, :key => 'my secret key'
+  #     attr_masker :email, :key => 'my secret key'
   #   end
   #
-  #   User.masked_attributes # { :email => { :attribute => 'masked_email', :key => 'my secret key' } }
-  def masked_attributes
-    @masked_attributes ||= superclass.masked_attributes.dup
+  #   User.masker_attributes # { :email => { :attribute => 'masker_email', :key => 'my secret key' } }
+  def masker_attributes
+    @masker_attributes ||= superclass.masker_attributes.dup
   end
 
   # Forwards calls to :mask_#{attribute} to the corresponding mask method
-  # if attribute was configured with attr_masked
+  # if attribute was configured with attr_masker
   #
   # Example
   #
   #   class User
-  #     attr_masked :email, :key => 'my secret key'
+  #     attr_masker :email, :key => 'my secret key'
   #   end
   #
-  #   User.mask_email('SOME_masked_EMAIL_STRING')
+  #   User.mask_email('SOME_masker_EMAIL_STRING')
   def method_missing(method, *arguments, &block)
-    if method.to_s =~ /^mask_(.+)$/ && attr_masked?($1)
+    if method.to_s =~ /^mask_(.+)$/ && attr_masker?($1)
       send(:mask, $1, *arguments)
     else
       super
@@ -234,28 +233,30 @@ module Indigo::AttrMasked
   # Only include these methods in the rake task, and only run it in QA, cuz 
   # they're DANGEROUS!
   #
+  # TODO: Adapter for different SQL flavours!
+  #
   module DangerousInstanceMethods
 
-    # For each masked attribute, mask it, and save it!
+    # For each masker attribute, mask it, and save it!
     #
     def mask!
-      return if self.class.masked_attributes.length < 1
+      return if self.class.masker_attributes.length < 1
 
-      sql_snippet = self.class.masked_attributes.map do |masked_attr|
-        # puts masked_attr
-        masked_attr[0]
-        attr_name, column_name = masked_attr[0], (masked_attr[1][:column_name] || masked_attr[0])
+      sql_snippet = self.class.masker_attributes.map do |masker_attr|
+        # puts masker_attr
+        masker_attr[0]
+        attr_name, column_name = masker_attr[0], (masker_attr[1][:column_name] || masker_attr[0])
       end.inject({}) do |acc, (attr_name, column_name)|
 
-        # build a map of { attr_name => masked_value }
-        masked_value = self.mask(attr_name)
+        # build a map of { attr_name => masker_value }
+        masker_value = self.mask(attr_name)
         acc.merge(
-          [attr_name, column_name] => masked_value
+          [attr_name, column_name] => masker_value
         )
-      end.inject([]) do |acc, ((attr_name, column_name), masked_value)|
-        self.send("#{attr_name}=", masked_value)
-        final_masked_value = self.send(column_name)
-        acc << "#{column_name}=#{ActiveRecord::Base.sanitize(final_masked_value)}"
+      end.inject([]) do |acc, ((attr_name, column_name), masker_value)|
+        self.send("#{attr_name}=", masker_value)
+        final_masker_value = self.send(column_name)
+        acc << "#{column_name}=#{ActiveRecord::Base.sanitize(final_masker_value)}"
       end.join(', ')
 
       sql = <<-EOQ
@@ -274,7 +275,7 @@ module Indigo::AttrMasked
     #
     #  class User
     #    attr_accessor :secret_key
-    #    attr_masked :email, :key => :secret_key
+    #    attr_masker :email, :key => :secret_key
     #
     #    def initialize(secret_key)
     #      self.secret_key = secret_key
@@ -285,16 +286,16 @@ module Indigo::AttrMasked
     #  @user.mask(:email, 'test@example.com')
     def mask(attribute, value=nil)
       value = self.send(attribute) if value.nil?
-      self.class.mask(attribute, value, evaluated_attr_masked_options_for(attribute))
+      self.class.mask(attribute, value, evaluated_attr_masker_options_for(attribute))
     end
 
     protected
 
-      # Returns attr_masked options evaluated in the current object's scope for the attribute specified
+      # Returns attr_masker options evaluated in the current object's scope for the attribute specified
       # XXX:Keep
-      def evaluated_attr_masked_options_for(attribute)
-        self.class.masked_attributes[attribute.to_sym].inject({}) do |hash, (option, value)|
-          hash.merge!(option => evaluate_attr_masked_option(value))
+      def evaluated_attr_masker_options_for(attribute)
+        self.class.masker_attributes[attribute.to_sym].inject({}) do |hash, (option, value)|
+          hash.merge!(option => evaluate_attr_masker_option(value))
         end
       end
 
@@ -302,7 +303,7 @@ module Indigo::AttrMasked
       # XXX:Keep
       #
       # If the option is not a symbol or proc then the original option is returned
-      def evaluate_attr_masked_option(option)
+      def evaluate_attr_masker_option(option)
         if option.is_a?(Symbol) && respond_to?(option)
           send(option)
         elsif option.respond_to?(:call)
@@ -314,4 +315,4 @@ module Indigo::AttrMasked
   end
 end
 
-Object.extend Indigo::AttrMasked
+Object.extend AttrMasker
