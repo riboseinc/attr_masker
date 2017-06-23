@@ -260,7 +260,7 @@ module AttrMasker
       end.join(', ')
 
       sql = <<-EOQ
-        UPDATE #{self.class.table_name} SET #{sql_snippet} WHERE id=#{self.id}
+        UPDATE #{self.class.table_name} SET #{sql_snippet} WHERE id=#{ActiveRecord::Base.sanitize(self.id)}
       EOQ
 
       ActiveRecord::Base.connection.execute sql
