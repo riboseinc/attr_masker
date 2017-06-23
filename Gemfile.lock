@@ -6,7 +6,7 @@ PATH
       rspec (>= 3.0)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     actioncable (5.1.1)
       actionpack (= 5.1.1)
@@ -128,4 +128,4 @@ DEPENDENCIES
   attr_masker!
 
 BUNDLED WITH
-   1.15.0
+   1.15.1
