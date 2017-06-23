@@ -115,9 +115,9 @@ module AttrMasker
     attributes.each do |attribute|
       masker_attribute_name = (options[:attribute] ? options[:attribute] : [options[:prefix], attribute, options[:suffix]].join).to_sym
 
-      instance_methods_as_symbols = instance_methods.collect { |method| method.to_sym }
-      attr_reader masker_attribute_name unless instance_methods_as_symbols.include?(masker_attribute_name)
-      attr_writer masker_attribute_name unless instance_methods_as_symbols.include?(:"#{masker_attribute_name}=")
+      # instance_methods_as_symbols = instance_methods.collect { |method| method.to_sym }
+      # attr_reader masker_attribute_name unless instance_methods_as_symbols.include?(masker_attribute_name)
+      # attr_writer masker_attribute_name unless instance_methods_as_symbols.include?(:"#{masker_attribute_name}=")
 
       # define_method(attribute) do
       #   instance_variable_get("@#{attribute}") ||
