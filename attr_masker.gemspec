@@ -10,8 +10,9 @@ Gem::Specification.new do |gem|
   gem.version           = AttrMasker::Version.string
   gem.authors           = ['Ribose Inc.']
   gem.email             = ['open.source@ribose.com']
-  gem.homepage          = ''
+  gem.homepage          = 'https://github.com/riboseinc/attr_masker'
   gem.summary           = 'Masking attributes'
+  gem.licenses          = ['MIT']
   gem.description       = <<EOF
 It is desired to mask certain attributes of certain models by modifying the 
 database.
