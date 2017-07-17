@@ -10,8 +10,9 @@ Gem::Specification.new do |gem|
   gem.version           = AttrMasker::Version.string
   gem.authors           = ['Ribose Inc.']
   gem.email             = ['open.source@ribose.com']
-  gem.homepage          = ''
+  gem.homepage          = 'https://github.com/riboseinc/attr_masker'
   gem.summary           = 'Masking attributes'
+  gem.licenses          = ['MIT']
   gem.description       = <<EOF
 It is desired to mask certain attributes of certain models by modifying the 
 database.
@@ -22,6 +23,7 @@ EOF
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency('rails', '>= 4.0.0')
-  gem.add_dependency('rspec', '>= 3.0')
+  gem.add_runtime_dependency('rails', '>= 4.0.0')
+
+  gem.add_development_dependency('rspec', '>= 3.0')
 end
