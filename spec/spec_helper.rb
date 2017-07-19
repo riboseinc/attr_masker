@@ -1,13 +1,19 @@
-# -*- encoding: utf-8 -*-
 # (c) 2017 Ribose Inc.
 #
 
-require 'rails/all'
-
-Dir["#{File.dirname(__FILE__)}/helpers/**/*.rb"].each do |path|
-  require path
-end
+require "bundler"
+Bundler.require :default, :development
 
 RSpec.configure do |config|
-  config.color_enabled = true
+  # Enable flags like --only-failures and --next-failure
+  config.example_status_persistence_file_path = ".rspec_status"
+
+  # Disable RSpec exposing methods globally on `Module` and `main`
+  config.disable_monkey_patching!
+
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
 end
+
+require "rails/all"
