@@ -32,7 +32,7 @@ namespace :db do
 
         # include mixin for this class
         klass.class_eval do
-	  # extend AttrMasker::DangerousClassMethods
+          # extend AttrMasker::DangerousClassMethods
           include AttrMasker::DangerousInstanceMethods
         end
 
