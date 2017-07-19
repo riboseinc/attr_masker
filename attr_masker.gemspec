@@ -25,6 +25,7 @@ EOF
 
   gem.add_runtime_dependency('rails', '>= 4.0.0')
 
+  gem.add_development_dependency('bundler', '~> 1.15')
   gem.add_development_dependency('rspec', '>= 3.0')
   gem.add_development_dependency('rubocop', '~> 0.49.1')
 end
