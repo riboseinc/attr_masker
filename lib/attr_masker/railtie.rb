@@ -2,7 +2,7 @@
 # (c) 2017 Ribose Inc.
 #
 
-# URL: 
+# URL:
 # http://blog.nathanhumbert.com/2010/02/rails-3-loading-rake-tasks-from-gem.html
 
 require 'attr_masker'

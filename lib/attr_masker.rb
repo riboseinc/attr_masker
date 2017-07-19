@@ -19,7 +19,7 @@ module AttrMasker
 
   # Generates attr_accessors that mask attributes transparently
   #
-  # Options (any other options you specify are passed to the masker's mask 
+  # Options (any other options you specify are passed to the masker's mask
   # methods)
   #
   #   :attribute        => The name of the referenced masker attribute. For example
@@ -222,7 +222,7 @@ module AttrMasker
 
     # This default masker simply replaces any value with a fixed string.
     #
-    # +opts+ is a Hash with the key :value that gives you the current attribute 
+    # +opts+ is a Hash with the key :value that gives you the current attribute
     # value.
     #
     def self.mask opts
@@ -230,7 +230,7 @@ module AttrMasker
     end
   end
 
-  # Only include these methods in the rake task, and only run it in QA, cuz 
+  # Only include these methods in the rake task, and only run it in QA, cuz
   # they're DANGEROUS!
   #
   # TODO: Adapter for different SQL flavours!
