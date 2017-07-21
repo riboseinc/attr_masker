@@ -20,3 +20,7 @@ RSpec.configure do |config|
 end
 
 require "rails/all"
+
+require "rake"
+Rails.application.load_tasks
+load File.expand_path("../../lib/tasks/db.rake", __FILE__)
