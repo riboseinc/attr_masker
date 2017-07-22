@@ -43,6 +43,22 @@ RSpec.describe "Attr Masker gem" do
     end
   end
 
+  example "Specifying multiple attributes in an attr_masker declaration" do
+    User.class_eval do
+      attr_masker :first_name, :last_name
+    end
+
+    expect { run_rake_task }.not_to(change { User.count })
+
+    [han, luke].each do |record|
+      expect { record.reload }.to(
+        change { record.first_name }.to("(redacted)") &
+        change { record.last_name }.to("(redacted)") &
+        preserve { record.email }
+      )
+    end
+  end
+
   def run_rake_task
     Rake::Task["db:mask"].invoke
   end
