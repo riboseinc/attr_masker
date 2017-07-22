@@ -1,5 +1,5 @@
-# -*- encoding: utf-8 -*-
 # (c) 2017 Ribose Inc.
+#
 
 module AttrMasker
   # Contains information about this gem's version
