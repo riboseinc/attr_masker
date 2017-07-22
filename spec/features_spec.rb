@@ -34,9 +34,13 @@ RSpec.describe "Attr Masker gem" do
 
     expect { run_rake_task }.not_to(change { User.count })
 
-    expect { han.reload }.to(change { han.last_name }.to("(redacted)"))
-
-    expect(1).to eq(1)
+    [han, luke].each do |record|
+      expect { record.reload }.to(
+        change { record.last_name }.to("(redacted)") &
+        preserve { record.first_name } &
+        preserve { record.email }
+      )
+    end
   end
 
   def run_rake_task
