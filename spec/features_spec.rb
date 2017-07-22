@@ -9,6 +9,12 @@ require "spec_helper"
 RSpec.describe "Attr Masker gem" do
   before do
     stub_const "User", Class.new(ActiveRecord::Base)
+
+    User.class_eval do
+      def jedi?
+        email.ends_with? "@jedi.example.test"
+      end
+    end
   end
 
   let!(:han) do
@@ -57,6 +63,86 @@ RSpec.describe "Attr Masker gem" do
         preserve { record.email }
       )
     end
+  end
+
+  example "Skipping some records when a symbol is passed to :if option" do
+    User.class_eval do
+      attr_masker :first_name, :last_name, if: :jedi?
+    end
+
+    expect { run_rake_task }.not_to(change { User.count })
+
+    expect { han.reload }.to(
+      preserve { han.first_name } &
+      preserve { han.last_name } &
+      preserve { han.email }
+    )
+
+    expect { luke.reload }.to(
+      change { luke.first_name }.to("(redacted)") &
+      change { luke.last_name }.to("(redacted)") &
+      preserve { luke.email }
+    )
+  end
+
+  example "Skipping some records when a lambda is passed to :if option" do
+    User.class_eval do
+      attr_masker :first_name, :last_name, if: ->(r) { r.jedi? }
+    end
+
+    expect { run_rake_task }.not_to(change { User.count })
+
+    expect { han.reload }.to(
+      preserve { han.first_name } &
+      preserve { han.last_name } &
+      preserve { han.email }
+    )
+
+    expect { luke.reload }.to(
+      change { luke.first_name }.to("(redacted)") &
+      change { luke.last_name }.to("(redacted)") &
+      preserve { luke.email }
+    )
+  end
+
+  example "Skipping some records when a symbol is passed to :unless option" do
+    User.class_eval do
+      attr_masker :first_name, :last_name, unless: :jedi?
+    end
+
+    expect { run_rake_task }.not_to(change { User.count })
+
+    expect { han.reload }.to(
+      change { han.first_name }.to("(redacted)") &
+      change { han.last_name }.to("(redacted)") &
+      preserve { han.email }
+    )
+
+    expect { luke.reload }.to(
+      preserve { luke.first_name } &
+      preserve { luke.last_name } &
+      preserve { luke.email }
+    )
+  end
+
+  example "Skipping some records when a lambda is passed to :unless option" do
+    User.class_eval do
+      attr_masker :first_name, :last_name, unless: ->(r) { r.jedi? }
+    end
+
+    expect { run_rake_task }.not_to(change { User.count })
+
+    expect { han.reload }.to(
+      change { han.first_name }.to("(redacted)") &
+      change { han.last_name }.to("(redacted)") &
+      preserve { han.email }
+    )
+
+    expect { luke.reload }.to(
+      preserve { luke.first_name } &
+      preserve { luke.last_name } &
+      preserve { luke.email }
+    )
   end
 
   def run_rake_task
