@@ -13,10 +13,8 @@ Gem::Specification.new do |gem|
   gem.homepage          = "https://github.com/riboseinc/attr_masker"
   gem.summary           = "Masking attributes"
   gem.licenses          = ["MIT"]
-  gem.description       = <<EOF
-It is desired to mask certain attributes of certain models by modifying the 
-database.
-EOF
+  gem.description       = "It is desired to mask certain attributes " \
+                          "of certain models by modifying the database."
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
