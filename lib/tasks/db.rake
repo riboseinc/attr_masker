@@ -5,7 +5,8 @@
 # rubocop:disable Style/HashSyntax
 
 namespace :db do
-  desc "Mask every DB record according to rules set up in the respective ActiveRecord"
+  desc "Mask every DB record according to rules set up in the respective " \
+  "ActiveRecord"
 
   # If just:
   #   task :mask do ... end,
