@@ -1,6 +1,9 @@
 # (c) 2017 Ribose Inc.
 #
 
+# Hashrocket style looks better when describing task dependencies.
+# rubocop:disable Style/HashSyntax
+
 namespace :db do
   desc 'Mask every DB record according to rules set up in the respective ActiveRecord'
 
