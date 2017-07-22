@@ -14,7 +14,7 @@ module AttrMasker
     #
     #   Version.string # '1.0.2'
     def self.string
-      [MAJOR, MINOR, PATCH].join('.')
+      [MAJOR, MINOR, PATCH].join(".")
     end
   end
 end

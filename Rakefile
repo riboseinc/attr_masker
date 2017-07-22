@@ -5,8 +5,8 @@
 # require 'rake/testtask'
 # require 'rake/rdoctask'
 
-require 'bundler/gem_tasks'
-load 'tasks/db.rake'
+require "bundler/gem_tasks"
+load "tasks/db.rake"
 
 # desc 'Generate documentation for the attr_masker gem.'
 # Rake::RDocTask.new(:rdoc) do |rdoc|

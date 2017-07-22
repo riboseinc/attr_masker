@@ -5,7 +5,7 @@
 # rubocop:disable Style/HashSyntax
 
 namespace :db do
-  desc 'Mask every DB record according to rules set up in the respective ActiveRecord'
+  desc "Mask every DB record according to rules set up in the respective ActiveRecord"
 
   # If just:
   #   task :mask do ... end,
@@ -16,7 +16,7 @@ namespace :db do
   #
   task :mask => :environment do
     unless Kernel.const_defined? :ActiveRecord
-      warn 'ActiveRecord undefined. Nothing to do!'
+      warn "ActiveRecord undefined. Nothing to do!"
       exit 1
     end
 
