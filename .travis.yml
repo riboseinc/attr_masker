@@ -1,9 +1,23 @@
 sudo: false
+dist: trusty
 language: ruby
-rvm:
-  - 2.2.2
-  - 2.3.1
-  - 2.4.0
 before_install: gem install bundler -v 1.15.1
+
 script:
   - bundle exec rspec
+
+rvm:
+  - "2.4"
+  - "2.3"
+  - "2.2"
+  - "ruby-head"
+
+gemfile:
+  - gemfiles/Rails-4.2.gemfile
+
+matrix:
+  include:
+    - rvm: "2.3"
+      gemfile: "gemfiles/Rails-4.1.gemfile"
+    - rvm: "2.3"
+      gemfile: "gemfiles/Rails-4.0.gemfile"
