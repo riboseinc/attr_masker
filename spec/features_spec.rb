@@ -1,6 +1,9 @@
 # (c) 2017 Ribose Inc.
 #
 
+# No point in using ApplicationRecord here.
+# rubocop:disable Rails/ApplicationRecord
+
 require "spec_helper"
 
 RSpec.describe "Attr Masker gem" do
