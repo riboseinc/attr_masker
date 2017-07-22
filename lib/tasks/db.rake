@@ -8,11 +8,10 @@ namespace :db do
   #   task :mask do ... end,
   # then connection won't be established.  Will need the '=> :environment'.
   #
-  # URL: 
+  # URL:
   # http://stackoverflow.com/questions/14163938/activerecordconnectionnotestablished-within-a-rake-task
   #
   task :mask => :environment do
-
     unless Kernel.const_defined? :ActiveRecord
       warn 'ActiveRecord undefined. Nothing to do!'
       exit 1
@@ -25,7 +24,7 @@ namespace :db do
       exit 1
     end
 
-    # Send the #mask! message to each and every record that has persistence in 
+    # Send the #mask! message to each and every record that has persistence in
     # the DB.
     #
     ActiveRecord::Base.descendants.each do |klass|
