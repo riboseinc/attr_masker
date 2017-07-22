@@ -4,8 +4,7 @@
 require "bundler"
 Bundler.require :default, :development
 
-Combustion.path = "spec/dummy"
-Combustion.initialize! :all
+Dir[File.expand_path "../support/**/*.rb", __FILE__].each { |f| require f }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -20,7 +19,3 @@ RSpec.configure do |config|
 end
 
 require "rails/all"
-
-require "rake"
-Rails.application.load_tasks
-load File.expand_path("../../lib/tasks/db.rake", __FILE__)
