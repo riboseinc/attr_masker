@@ -25,6 +25,7 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency("bundler", "~> 1.15")
   gem.add_development_dependency("combustion", "~> 0.7.0")
+  gem.add_development_dependency("database_cleaner", "~> 1.6")
   gem.add_development_dependency("pry")
   gem.add_development_dependency("rspec", ">= 3.0")
   gem.add_development_dependency("rubocop", "~> 0.49.1")
