@@ -3,6 +3,6 @@ ActiveRecord::Schema.define do
     t.string :first_name
     t.string :last_name
     t.string :email
-    t.timestamps
+    t.timestamps null: false
   end
 end
