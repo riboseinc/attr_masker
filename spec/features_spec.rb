@@ -146,6 +146,6 @@ RSpec.describe "Attr Masker gem" do
   end
 
   def run_rake_task
-    Rake::Task["db:mask"].invoke
+    Rake::Task["db:mask"].execute
   end
 end
