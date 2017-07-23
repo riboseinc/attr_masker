@@ -15,6 +15,9 @@ RSpec.describe "Attr Masker gem" do
         email.ends_with? "@jedi.example.test"
       end
     end
+
+    allow(ActiveRecord::Base).to receive(:descendants).
+      and_return([ActiveRecord::SchemaMigration, User])
   end
 
   let!(:han) do
