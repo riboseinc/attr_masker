@@ -148,6 +148,37 @@ RSpec.describe "Attr Masker gem" do
     )
   end
 
+  example "Using a custom masker" do
+    custom_masker = Object.new
+
+    def custom_masker.mask(value:, **_)
+      value.reverse
+    end
+
+    def custom_masker.upcase(value:, **_)
+      value.upcase
+    end
+
+    User.class_eval do
+      attr_masker :first_name, masker: custom_masker
+      attr_masker :last_name, masker: custom_masker, mask_method: :upcase
+    end
+
+    expect { run_rake_task }.not_to(change { User.count })
+
+    expect { han.reload }.to(
+      change { han.first_name }.to("naH") &
+      change { han.last_name }.to("SOLO") &
+      preserve { han.email }
+    )
+
+    expect { luke.reload }.to(
+      change { luke.first_name }.to("ekuL") &
+      change { luke.last_name }.to("SKYWALKER") &
+      preserve { luke.email }
+    )
+  end
+
   def run_rake_task
     Rake::Task["db:mask"].execute
   end
