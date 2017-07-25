@@ -113,26 +113,6 @@ module AttrMasker
 
     attributes.each do |attribute|
       masker_attribute_name = (options[:attribute] ? options[:attribute] : [options[:prefix], attribute, options[:suffix]].join).to_sym
-
-      # instance_methods_as_symbols = instance_methods.collect { |method| method.to_sym }
-      # attr_reader masker_attribute_name unless instance_methods_as_symbols.include?(masker_attribute_name)
-      # attr_writer masker_attribute_name unless instance_methods_as_symbols.include?(:"#{masker_attribute_name}=")
-
-      # define_method(attribute) do
-      #   instance_variable_get("@#{attribute}") ||
-      #     instance_variable_set("@#{attribute}", unmask(attribute, send(masker_attribute_name)))
-      # end
-
-      # define_method("#{attribute}=") do |value|
-      #   send("#{masker_attribute_name}=", mask(attribute, value))
-      #   instance_variable_set("@#{attribute}", value)
-      # end
-
-      # define_method("#{attribute}?") do
-      #   value = send(attribute)
-      #   value.respond_to?(:empty?) ? !value.empty? : !!value
-      # end
-
       masker_attributes[attribute.to_sym] = options.merge(:attribute => masker_attribute_name)
     end
   end
