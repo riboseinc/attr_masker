@@ -9,15 +9,24 @@ script:
 rvm:
   - "2.4"
   - "2.3"
-  - "2.2"
   - "ruby-head"
 
 gemfile:
-  - gemfiles/Rails-4.2.gemfile
+  - gemfiles/Rails-5.1.gemfile
 
 matrix:
   include:
+    - rvm: "2.4"
+      gemfile: "gemfiles/Rails-head.gemfile"
+    - rvm: "2.4"
+      gemfile: "gemfiles/Rails-5.0.gemfile"
+    - rvm: "2.3"
+      gemfile: "gemfiles/Rails-4.2.gemfile"
     - rvm: "2.3"
       gemfile: "gemfiles/Rails-4.1.gemfile"
-    - rvm: "2.3"
+    - rvm: "2.2"
       gemfile: "gemfiles/Rails-4.0.gemfile"
+
+  allow_failures:
+    - rvm: "ruby-head"
+    - gemfile: "gemfiles/Rails-head.gemfile"
