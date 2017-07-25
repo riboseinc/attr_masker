@@ -6,7 +6,7 @@
 
 require "spec_helper"
 
-RSpec.describe "Attr Masker gem" do
+RSpec.describe "Attr Masker gem", :suppress_stdout do
   before do
     stub_const "User", Class.new(ActiveRecord::Base)
 
