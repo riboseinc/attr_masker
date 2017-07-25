@@ -231,38 +231,21 @@ module AttrMasker
 
   # Only include these methods in the rake task, and only run it in QA, cuz
   # they're DANGEROUS!
-  #
-  # TODO: Adapter for different SQL flavours!
-  #
   module DangerousInstanceMethods
 
     # For each masker attribute, mask it, and save it!
     #
     def mask!
-      return if self.class.masker_attributes.length < 1
+      return if self.class.masker_attributes.empty?
 
-      sql_snippet = self.class.masker_attributes.map do |masker_attr|
-        # puts masker_attr
-        masker_attr[0]
-        attr_name, column_name = masker_attr[0], (masker_attr[1][:column_name] || masker_attr[0])
-      end.inject({}) do |acc, (attr_name, column_name)|
+      updates = self.class.masker_attributes.reduce({}) do |acc, masker_attr|
+        attr_name = masker_attr[0]
+        column_name = masker_attr[1][:column_name] || attr_name
+        masker_value = mask(attr_name)
+        acc.merge!(column_name => masker_value)
+      end
 
-        # build a map of { attr_name => masker_value }
-        masker_value = self.mask(attr_name)
-        acc.merge(
-          [attr_name, column_name] => masker_value
-        )
-      end.inject([]) do |acc, ((attr_name, column_name), masker_value)|
-        self.send("#{attr_name}=", masker_value)
-        final_masker_value = self.send(column_name)
-        acc << "#{column_name}=#{ActiveRecord::Base.sanitize(final_masker_value)}"
-      end.join(', ')
-
-      sql = <<-EOQ
-        UPDATE #{self.class.table_name} SET #{sql_snippet} WHERE id=#{ActiveRecord::Base.sanitize(self.id)}
-      EOQ
-
-      ActiveRecord::Base.connection.execute sql
+      self.class.all.update(id, updates)
     end
   end
 
