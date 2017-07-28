@@ -3,9 +3,9 @@
 
 # Adds attr_accessors that mask an object's attributes
 module AttrMasker
-  autoload :Version, 'attr_masker/version'
+  autoload :Version, "attr_masker/version"
 
-  require 'attr_masker/railtie' if defined?(Rails)
+  require "attr_masker/railtie" if defined?(Rails)
   def self.extended(base) # :nodoc:
     base.class_eval do
 
@@ -77,10 +77,10 @@ module AttrMasker
       :column_name      => nil,
       :marshal          => false,
       :marshaler        => Marshal,
-      :dump_method      => 'dump',
-      :load_method      => 'load',
+      :dump_method      => "dump",
+      :load_method      => "load",
       :masker           => AttrMasker::Masker,
-      :mask_method      => 'mask',
+      :mask_method      => "mask",
     }.merge!(attr_masker_options).merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
 
     attributes.each do |attribute|
@@ -176,7 +176,7 @@ module AttrMasker
     # value.
     #
     def self.mask opts
-      '(redacted)'
+      "(redacted)"
     end
   end
 
