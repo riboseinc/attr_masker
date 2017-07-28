@@ -21,22 +21,6 @@ module AttrMasker
   # Options (any other options you specify are passed to the masker's mask
   # methods)
   #
-  #   :attribute        => The name of the referenced masker attribute. For example
-  #                        <tt>attr_accessor :email, :attribute => :ee</tt> would generate an
-  #                        attribute named 'ee' to store the masker email. This is useful when defining
-  #                        one attribute to mask at a time or when the :prefix and :suffix options
-  #                        aren't enough. Defaults to nil.
-  #
-  #   :prefix           => A prefix used to generate the name of the referenced masker attributes.
-  #                        For example <tt>attr_accessor :email, :password, :prefix => 'crypted_'</tt> would
-  #                        generate attributes named 'crypted_email' and 'crypted_password' to store the
-  #                        masker email and password. Defaults to 'masker_'.
-  #
-  #   :suffix           => A suffix used to generate the name of the referenced masker attributes.
-  #                        For example <tt>attr_accessor :email, :password, :prefix => '', :suffix => '_masker'</tt>
-  #                        would generate attributes named 'email_masker' and 'password_masker' to store the
-  #                        masker email. Defaults to ''.
-  #
   #   :key              => The maskion key. This option may not be required if you're using a custom masker. If you pass
   #                        a symbol representing an instance method then the :key option will be replaced with the result of the
   #                        method before being passed to the masker. Objects that respond to :call are evaluated as well (including procs).
@@ -112,8 +96,7 @@ module AttrMasker
     }.merge!(attr_masker_options).merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
 
     attributes.each do |attribute|
-      masker_attribute_name = (options[:attribute] ? options[:attribute] : [options[:prefix], attribute, options[:suffix]].join).to_sym
-      masker_attributes[attribute.to_sym] = options.merge(:attribute => masker_attribute_name)
+      masker_attributes[attribute.to_sym] = options.merge(attribute: attribute.to_sym)
     end
   end
 
