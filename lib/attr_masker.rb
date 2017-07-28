@@ -26,12 +26,6 @@ module AttrMasker
   #                        method before being passed to the masker. Objects that respond to :call are evaluated as well (including procs).
   #                        Any other key types will be passed directly to the masker.
   #
-  #   :encode           => If set to true, attributes will be encoded as well as masker. This is useful if you're
-  #                        planning on storing the masker attributes in a database. The default encoding is 'm' (base64),
-  #                        however this can be overwritten by setting the :encode option to some other encoding string instead of
-  #                        just 'true'. See http://www.ruby-doc.org/core/classes/Array.html#M002245 for more encoding directives.
-  #                        Defaults to false unless you're using it with ActiveRecord, DataMapper, or Sequel.
-  #
   #   :marshal          => If set to true, attributes will be marshaled as well as masker. This is useful if you're planning
   #                        on masking something other than a string. Defaults to false unless you're using it with ActiveRecord
   #                        or DataMapper.
@@ -58,7 +52,7 @@ module AttrMasker
   #
   #   class User
   #     # now all attributes will be encoded and marshaled by default
-  #     attr_masker_options.merge!(:encode => true, :marshal => true, :some_other_option => true)
+  #     attr_masker_options.merge!(:marshal => true, :some_other_option => true)
   #     attr_masker :configuration, :key => 'my secret key'
   #   end
   #
@@ -85,7 +79,6 @@ module AttrMasker
     options = {
       :if               => true,
       :unless           => false,
-      :encode           => false,
       :column_name      => nil,
       :marshal          => false,
       :marshaler        => Marshal,
