@@ -21,11 +21,6 @@ module AttrMasker
   # Options (any other options you specify are passed to the masker's mask
   # methods)
   #
-  #   :key              => The maskion key. This option may not be required if you're using a custom masker. If you pass
-  #                        a symbol representing an instance method then the :key option will be replaced with the result of the
-  #                        method before being passed to the masker. Objects that respond to :call are evaluated as well (including procs).
-  #                        Any other key types will be passed directly to the masker.
-  #
   #   :marshal          => If set to true, attributes will be marshaled as well as masker. This is useful if you're planning
   #                        on masking something other than a string. Defaults to false unless you're using it with ActiveRecord
   #                        or DataMapper.
@@ -53,15 +48,15 @@ module AttrMasker
   #   class User
   #     # now all attributes will be encoded and marshaled by default
   #     attr_masker_options.merge!(:marshal => true, :some_other_option => true)
-  #     attr_masker :configuration, :key => 'my secret key'
+  #     attr_masker :configuration
   #   end
   #
   #
   # Example
   #
   #   class User
-  #     attr_masker :email, :credit_card, :key => 'some secret key'
-  #     attr_masker :configuration, :key => 'some other secret key', :marshal => true
+  #     attr_masker :email, :credit_card
+  #     attr_masker :configuration, :marshal => true
   #   end
   #
   #   @user = User.new
@@ -147,10 +142,10 @@ module AttrMasker
   # Example
   #
   #   class User
-  #     attr_masker :email, :key => 'my secret key'
+  #     attr_masker :email
   #   end
   #
-  #   User.masker_attributes # { :email => { :attribute => 'masker_email', :key => 'my secret key' } }
+  #   User.masker_attributes # { :email => { :attribute => 'masker_email' } }
   def masker_attributes
     @masker_attributes ||= superclass.masker_attributes.dup
   end
@@ -161,7 +156,7 @@ module AttrMasker
   # Example
   #
   #   class User
-  #     attr_masker :email, :key => 'my secret key'
+  #     attr_masker :email
   #   end
   #
   #   User.mask_email('SOME_masker_EMAIL_STRING')
@@ -213,7 +208,7 @@ module AttrMasker
     #
     #  class User
     #    attr_accessor :secret_key
-    #    attr_masker :email, :key => :secret_key
+    #    attr_masker :email
     #
     #    def initialize(secret_key)
     #      self.secret_key = secret_key
