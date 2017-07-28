@@ -31,9 +31,9 @@ module AttrMasker
   #
   #   :load_method      => The load method name to call on the <tt>:marshaler</tt> object. Defaults to 'load'.
   #
-  #   :masker        => The object to use for masking. Defaults to Masker.
+  #   :masker           => The object to use for masking. Defaults to Masker.
   #
-  #   :mask_method   => The mask method name to call on the <tt>:masker</tt> object. Defaults to 'mask'.
+  #   :mask_method      => The mask method name to call on the <tt>:masker</tt> object. Defaults to 'mask'.
   #
   #   :if               => Attributes are only masker if this option evaluates to true. If you pass a symbol representing an instance
   #                        method then the result of the method will be evaluated. Any objects that respond to <tt>:call</tt> are evaluated as well.
