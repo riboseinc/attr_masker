@@ -5,6 +5,10 @@
 module AttrMasker
   autoload :Version, "attr_masker/version"
 
+  module Maskers
+    autoload :Simple, "attr_masker/maskers/simple"
+  end
+
   require "attr_masker/railtie" if defined?(Rails)
   def self.extended(base) # :nodoc:
     base.class_eval do
@@ -31,7 +35,7 @@ module AttrMasker
   #
   #   :load_method      => The load method name to call on the <tt>:marshaler</tt> object. Defaults to 'load'.
   #
-  #   :masker           => The object to use for masking. Defaults to Masker.
+  #   :masker           => The object to use for masking. Defaults to AttrMasker::Maskers::Simple.
   #
   #   :mask_method      => The mask method name to call on the <tt>:masker</tt> object. Defaults to 'mask'.
   #
@@ -79,7 +83,7 @@ module AttrMasker
       :marshaler        => Marshal,
       :dump_method      => "dump",
       :load_method      => "load",
-      :masker           => AttrMasker::Masker,
+      :masker           => AttrMasker::Maskers::Simple,
       :mask_method      => "mask",
     }.merge!(attr_masker_options).merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
 
@@ -165,18 +169,6 @@ module AttrMasker
       send(:mask, $1, *arguments)
     else
       super
-    end
-  end
-
-  class Masker
-
-    # This default masker simply replaces any value with a fixed string.
-    #
-    # +opts+ is a Hash with the key :value that gives you the current attribute
-    # value.
-    #
-    def self.mask opts
-      "(redacted)"
     end
   end
 
