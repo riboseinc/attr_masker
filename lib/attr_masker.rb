@@ -84,7 +84,7 @@ module AttrMasker
       :dump_method      => "dump",
       :load_method      => "load",
       :masker           => AttrMasker::Maskers::Simple,
-      :mask_method      => "mask",
+      :mask_method      => "call",
     }.merge!(attr_masker_options).merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
 
     attributes.each do |attribute|

@@ -8,7 +8,7 @@ require "spec_helper"
 RSpec.describe AttrMasker::Maskers::Simple do
   subject { described_class }
 
-  example { expect(subject.mask(value: "Solo")).to eq("(redacted)") }
-  example { expect(subject.mask(value: Math::PI)).to eq("(redacted)") }
-  example { expect(subject.mask(value: nil)).to eq("(redacted)") }
+  example { expect(subject.(value: "Solo")).to eq("(redacted)") }
+  example { expect(subject.(value: Math::PI)).to eq("(redacted)") }
+  example { expect(subject.(value: nil)).to eq("(redacted)") }
 end

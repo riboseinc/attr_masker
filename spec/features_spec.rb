@@ -151,7 +151,7 @@ RSpec.describe "Attr Masker gem", :suppress_stdout do
   example "Using a custom masker" do
     custom_masker = Object.new
 
-    def custom_masker.mask(value:, **_)
+    def custom_masker.call(value:, **_)
       value.reverse
     end
 

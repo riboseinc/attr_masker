@@ -7,7 +7,7 @@ module AttrMasker
     #
     class Simple
 
-      def self.mask opts
+      def self.call opts
         "(redacted)"
       end
     end
