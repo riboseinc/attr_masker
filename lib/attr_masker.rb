@@ -220,7 +220,11 @@ module AttrMasker
       # XXX:Keep
       def evaluated_attr_masker_options_for(attribute)
         self.class.masker_attributes[attribute.to_sym].inject({}) do |hash, (option, value)|
-          hash.merge!(option => evaluate_attr_masker_option(value))
+          if %i[if unless].include?(option)
+            hash.merge!(option => evaluate_attr_masker_option(value))
+          else
+            hash.merge!(option => value)
+          end
         end
       end
 
