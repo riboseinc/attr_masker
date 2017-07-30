@@ -149,19 +149,17 @@ RSpec.describe "Attr Masker gem", :suppress_stdout do
   end
 
   example "Using a custom masker" do
-    custom_masker = Object.new
-
-    def custom_masker.call(value:, **_)
+    reverse_masker = ->(value:, **_) do
       value.reverse
     end
 
-    def custom_masker.upcase(value:, **_)
+    upcase_masker = ->(value:, **_) do
       value.upcase
     end
 
     User.class_eval do
-      attr_masker :first_name, masker: custom_masker
-      attr_masker :last_name, masker: custom_masker, mask_method: :upcase
+      attr_masker :first_name, masker: reverse_masker
+      attr_masker :last_name, masker: upcase_masker
     end
 
     expect { run_rake_task }.not_to(change { User.count })
