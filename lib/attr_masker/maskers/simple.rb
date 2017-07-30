@@ -5,11 +5,8 @@ module AttrMasker
     # +opts+ is a Hash with the key :value that gives you the current attribute
     # value.
     #
-    class Simple
-
-      def self.call opts
-        "(redacted)"
-      end
+    SIMPLE = lambda do |_opts|
+      "(redacted)"
     end
   end
 end
