@@ -35,9 +35,7 @@ module AttrMasker
   #
   #   :load_method      => The load method name to call on the <tt>:marshaler</tt> object. Defaults to 'load'.
   #
-  #   :masker           => The object to use for masking. Defaults to AttrMasker::Maskers::Simple.
-  #
-  #   :mask_method      => The mask method name to call on the <tt>:masker</tt> object. Defaults to 'mask'.
+  #   :masker           => The object to use for masking. It must respond to +#mask+. Defaults to AttrMasker::Maskers::Simple.
   #
   #   :if               => Attributes are only masker if this option evaluates to true. If you pass a symbol representing an instance
   #                        method then the result of the method will be evaluated. Any objects that respond to <tt>:call</tt> are evaluated as well.
@@ -84,7 +82,6 @@ module AttrMasker
       :dump_method      => "dump",
       :load_method      => "load",
       :masker           => AttrMasker::Maskers::SIMPLE,
-      :mask_method      => "call",
     }.merge!(attr_masker_options).merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
 
     attributes.each do |attribute|
@@ -131,7 +128,7 @@ module AttrMasker
     # if options[:if] && !options[:unless] && !value.nil? && !(value.is_a?(String) && value.empty?)
     if options[:if] && !options[:unless]
       value = options[:marshal] ? options[:marshaler].send(options[:dump_method], value) : value.to_s
-      masker_value = options[:masker].send(options[:mask_method], options.merge!(:value => value))
+      masker_value = options[:masker].call(options.merge!(:value => value))
       masker_value
     else
       value
