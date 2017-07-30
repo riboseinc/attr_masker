@@ -131,7 +131,6 @@ module AttrMasker
     # if options[:if] && !options[:unless] && !value.nil? && !(value.is_a?(String) && value.empty?)
     if options[:if] && !options[:unless]
       value = options[:marshal] ? options[:marshaler].send(options[:dump_method], value) : value.to_s
-      # masker_value = options[:masker].send(options[:mask_method], options.merge!(:value => value))
       masker_value = options[:masker].send(options[:mask_method], options.merge!(:value => value))
       masker_value
     else
