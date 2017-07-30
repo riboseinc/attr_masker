@@ -6,7 +6,7 @@ module AttrMasker
   autoload :Version, "attr_masker/version"
 
   module Maskers
-    autoload :Simple, "attr_masker/maskers/simple"
+    autoload :SIMPLE, "attr_masker/maskers/simple"
   end
 
   require "attr_masker/railtie" if defined?(Rails)
@@ -83,7 +83,7 @@ module AttrMasker
       :marshaler        => Marshal,
       :dump_method      => "dump",
       :load_method      => "load",
-      :masker           => AttrMasker::Maskers::Simple,
+      :masker           => AttrMasker::Maskers::SIMPLE,
       :mask_method      => "call",
     }.merge!(attr_masker_options).merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
 

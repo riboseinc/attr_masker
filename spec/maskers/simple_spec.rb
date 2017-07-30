@@ -5,7 +5,7 @@
 
 require "spec_helper"
 
-RSpec.describe AttrMasker::Maskers::Simple do
+RSpec.describe AttrMasker::Maskers::SIMPLE do
   subject { described_class }
 
   example { expect(subject.(value: "Solo")).to eq("(redacted)") }
