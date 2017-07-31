@@ -90,6 +90,26 @@ A hash is passed as an argument, which includes some information about the
 record being masked and the attribute value.  It can be used to further
 customize masker's behaviour.
 
+=== Built-in maskers
+
+Attr Masker comes with several built-in maskers.
+
+`AttrMasker::Maskers::SIMPLE`::
++
+Simply replaces any value with the `"(redacted)"`.  Only useful for columns
+containing textual data.
++
+This is a default masker.  It is used when `:masker` option is unspecified.
++
+Example:
++
+[source,ruby]
+----
+attr_masker :first_name
+attr_masker :last_name, :masker => AttrMasker::Maskers::SIMPLE
+----
++ Would set both `first_name` and `last_name` attributes to `"(redacted)"`.
+
 == Roadmap & TODOs
 - documentation
 - spec tests
