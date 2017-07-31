@@ -7,7 +7,15 @@ image:https://img.shields.io/travis/riboseinc/attr_masker/master.svg["Build Stat
 
 Mask ActiveRecord data with ease!
 
-== Installation
+== Introduction
+
+This gem is intended to mask sensitive data so that production database dumps
+can be used in staging or test environments.  It works with Active Record 4+
+and modern Rubies.
+
+== Getting started
+
+=== Installation
 
 Add attr_masker to your gemfile:
 
@@ -24,10 +32,9 @@ Then install the gem:
   bundle install
 ----
 
-== Usage
+=== Basic usage
 
-If you're using an ORM like `ActiveRecord`, `DataMapper`, or `Sequel`, using
-`attr_masker` is easy:
+In your models, define attributes which should be masked:
 
 [source,ruby]
 ----
@@ -36,28 +43,59 @@ If you're using an ORM like `ActiveRecord`, `DataMapper`, or `Sequel`, using
   end
 ----
 
-WARNING: Data are destructively overwritten.
-Run `rake db:mask` with care!
-
-
-Then, when you want to mask the data (which would be *destructively*
-overwritten), in non-production `Rails.env`, run the Rake task:
+Then, when you want to mask the data, run the `db:mask` Rake task in some
+Rails environment other than production, for example:
 
 [source,sh]
 ----
-  bundle exec rake db:mask
+  bundle exec rake db:mask RAILS_ENV=staging
 ----
 
-It'll then mask the attributes in your database, given that `Rails.env` is _not_
-`production`.
+WARNING: Data are destructively overwritten.  Run `rake db:mask` with care!
 
-.Roadmap TODOs
+=== Masking records selectively
+
+You can use `:if` and `:unless` options to prevent some records from being
+altered.
+
+[source,ruby]
+----
+# evaluates given proc for each record, and the record is passed as a proc's
+# argument
+attr_masker :email :unless => ->(record) { ! record.tester_user? }
+
+# calls #tester_user? method on each record
+attr_masker :first_name, :if => :tester_user?
+----
+
+=== Using custom maskers
+
+By default, data is maksed with `AttrMasker::Maskers::SIMPLE` masker which
+always returns `"(redacted)"` string.  But anything what responds to `#call`
+can be used instead: a lambda, `Method` instance, and more.  You can specify it
+by setting the `:masker` option.
+
+For instance, you may want to use https://github.com/ffaker/ffaker[ffaker] or
+https://github.com/skalee/well_read_faker[Well Read Faker] to generate random
+replacement values:
+
+[source,ruby]
+----
+require "ffaker"
+
+attr_masker :first_name, :masker => ->(_hash) { FFaker::Name.first_name }
+----
+
+A hash is passed as an argument, which includes some information about the
+record being masked and the attribute value.  It can be used to further
+customize masker's behaviour.
+
+== Roadmap & TODOs
 - documentation
 - spec tests
 - Make the `Rails.env` (in which `db:mask` could be run) configurable
 ** maybe by passing `ENV` vars
 - more masking options!
-** `Proc` as parameter
 ** default scrambling algorithms?
 ** structured text preserving algorithms
 *** _e.g._, keeping an HTML snippet valid HTML, but with masked inner text
@@ -68,4 +106,5 @@ It'll then mask the attributes in your database, given that `Rails.env` is _not_
 
 == Acknowledgements
 
-https://github.com/attr-encrypted/attr_encrypted[attr_encrypted] for the initial code structure
+https://github.com/attr-encrypted/attr_encrypted[attr_encrypted] for the initial
+code structure
