@@ -18,19 +18,22 @@ module AttrMasker
 
         all_models.each do |klass|
           next if klass.masker_attributes.empty?
-
-          printf "Masking #{klass}... "
-          if klass.count < 1
-            puts "Nothing to do!"
-          else
-            klass.all.each { |model| mask_object model }
-            puts " ==> done!"
-          end
+          mask_class(klass)
         end
         puts "All done!"
       end
 
       private
+
+      def mask_class(klass)
+        printf "Masking #{klass}... "
+        if klass.count < 1
+          puts "Nothing to do!"
+        else
+          klass.all.each { |model| mask_object model }
+          puts " ==> done!"
+        end
+      end
 
       # For each masker attribute, mask it, and save it!
       #
