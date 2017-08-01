@@ -24,12 +24,11 @@ module AttrMasker
       private
 
       def mask_class(klass)
-        printf "Masking #{klass}... "
-        if klass.count < 1
-          puts "Nothing to do!"
-        else
-          klass.all.each { |model| mask_object model }
-          puts " ==> done!"
+        progressbar_for_model(klass) do |bar|
+          klass.all.each do |model|
+            mask_object model
+            bar.increment
+          end
         end
       end
 
@@ -50,6 +49,19 @@ module AttrMasker
         klass.all.update(instance.id, updates)
 
         printf "OK"
+      end
+
+      def progressbar_for_model(klass)
+        bar = ProgressBar.create(
+          title: klass.name,
+          total: klass.count,
+          throttle_rate: 0.1,
+          format: %q[%t %c/%C (%j%%) %B %E],
+        )
+
+        yield bar
+      ensure
+        bar.finish
       end
 
       def all_models
