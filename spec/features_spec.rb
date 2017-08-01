@@ -9,7 +9,7 @@
 
 require "spec_helper"
 
-RSpec.describe "Attr Masker gem", :suppress_stdout do
+RSpec.describe "Attr Masker gem", :suppress_progressbar do
   before do
     stub_const "User", Class.new(ActiveRecord::Base)
 
