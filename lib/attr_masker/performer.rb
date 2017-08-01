@@ -16,8 +16,7 @@ module AttrMasker
           exit 1
         end
 
-        ::ActiveRecord::Base.descendants.each do |klass|
-          if klass.table_exists?
+        all_models.each do |klass|
             printf "Masking #{klass}... "
 
             if klass.count < 1 || klass.masker_attributes.length < 1
@@ -30,7 +29,6 @@ module AttrMasker
 
               puts " ==> done!"
             end
-          end
         end
         puts "All done!"
       end
@@ -54,6 +52,10 @@ module AttrMasker
         instance.class.all.update(instance.id, updates)
 
         printf "OK"
+      end
+
+      def all_models
+        ::ActiveRecord::Base.descendants.select(&:table_exists?)
       end
     end
   end
