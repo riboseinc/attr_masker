@@ -16,7 +16,7 @@ namespace :db do
   # http://stackoverflow.com/questions/14163938/activerecordconnectionnotestablished-within-a-rake-task
   #
   task :mask => :environment do
-    unless Kernel.const_defined? :ActiveRecord
+    unless defined? ::ActiveRecord
       warn "ActiveRecord undefined. Nothing to do!"
       exit 1
     end
