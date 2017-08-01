@@ -16,18 +16,8 @@ module AttrMasker
           exit 1
         end
 
-        # Send the #mask! message to each and every record that has persistence in
-        # the DB.
-        #
         ::ActiveRecord::Base.descendants.each do |klass|
           if klass.table_exists?
-
-            # include mixin for this class
-            klass.class_eval do
-              # extend AttrMasker::DangerousClassMethods
-              include AttrMasker::DangerousInstanceMethods
-            end
-
             printf "Masking #{klass}... "
 
             if klass.count < 1 || klass.masker_attributes.length < 1
@@ -35,9 +25,7 @@ module AttrMasker
             else
 
               klass.all.each do |model|
-                printf "\n --> masking #{model.id} - #{model}... "
-                model.mask!
-                printf "OK"
+                mask_object model
               end
 
               puts " ==> done!"
@@ -45,6 +33,27 @@ module AttrMasker
           end
         end
         puts "All done!"
+      end
+
+      private
+
+      # For each masker attribute, mask it, and save it!
+      #
+      def mask_object(instance)
+        printf "\n --> masking #{instance.id} - #{instance}... "
+
+        return if instance.class.masker_attributes.empty?
+
+        updates = instance.class.masker_attributes.reduce({}) do |acc, masker_attr|
+          attr_name = masker_attr[0]
+          column_name = masker_attr[1][:column_name] || attr_name
+          masker_value = instance.mask(attr_name)
+          acc.merge!(column_name => masker_value)
+        end
+
+        instance.class.all.update(instance.id, updates)
+
+        printf "OK"
       end
     end
   end

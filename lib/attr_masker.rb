@@ -171,26 +171,6 @@ module AttrMasker
     end
   end
 
-  # Only include these methods in the rake task, and only run it in QA, cuz
-  # they're DANGEROUS!
-  module DangerousInstanceMethods
-
-    # For each masker attribute, mask it, and save it!
-    #
-    def mask!
-      return if self.class.masker_attributes.empty?
-
-      updates = self.class.masker_attributes.reduce({}) do |acc, masker_attr|
-        attr_name = masker_attr[0]
-        column_name = masker_attr[1][:column_name] || attr_name
-        masker_value = mask(attr_name)
-        acc.merge!(column_name => masker_value)
-      end
-
-      self.class.all.update(id, updates)
-    end
-  end
-
   module InstanceMethods
 
     # masks a value for the attribute specified using options evaluated in the current object's scope
