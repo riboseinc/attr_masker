@@ -17,18 +17,15 @@ module AttrMasker
         end
 
         all_models.each do |klass|
-            printf "Masking #{klass}... "
+          next if klass.masker_attributes.empty?
 
-            if klass.count < 1 || klass.masker_attributes.length < 1
-              puts "Nothing to do!"
-            else
-
-              klass.all.each do |model|
-                mask_object model
-              end
-
-              puts " ==> done!"
-            end
+          printf "Masking #{klass}... "
+          if klass.count < 1
+            puts "Nothing to do!"
+          else
+            klass.all.each { |model| mask_object model }
+            puts " ==> done!"
+          end
         end
         puts "All done!"
       end
