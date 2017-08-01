@@ -110,6 +110,28 @@ attr_masker :last_name, :masker => AttrMasker::Maskers::SIMPLE
 ----
 + Would set both `first_name` and `last_name` attributes to `"(redacted)"`.
 
+`AttrMasker::Maskers::Replacing`::
++
+Replaces characters with some masker string (single asterisk by default).
+Can be initialized with options.
++
+[options="header"]
+|===============================================================================
+|Name|Default|Description
+|`replacement`|`"*"`|Replacement string, can be empty.
+|`alphanum_only`|`false`|When true, only alphanumeric charaters are replaced.
+|===============================================================================
++
+Example:
++
+[source,ruby]
+----
+rm = AttrMasker::Maskers::Replacing.new(character: "X", alphanum_only: true)
+attr_masker :phone, :masker => rm
+----
++
+Would mask "123-456-7890" as "XXX-XXX-XXXX".
+
 == Roadmap & TODOs
 - documentation
 - spec tests
