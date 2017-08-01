@@ -4,6 +4,9 @@
 # No point in using ApplicationRecord here.
 # rubocop:disable Rails/ApplicationRecord
 
+# No point in ensuring a trailing comma in multiline argument lists here.
+# rubocop:disable Style/TrailingCommaInArguments
+
 require "spec_helper"
 
 RSpec.describe "Attr Masker gem", :suppress_stdout do
