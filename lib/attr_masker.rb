@@ -5,6 +5,7 @@
 module AttrMasker
   autoload :Version, "attr_masker/version"
 
+  autoload :Error, "attr_masker/error"
   autoload :Performer, "attr_masker/performer"
 
   module Maskers

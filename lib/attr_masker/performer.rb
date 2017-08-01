@@ -5,15 +5,13 @@ module AttrMasker
     class ActiveRecord
       def mask
         unless defined? ::ActiveRecord
-          warn "ActiveRecord undefined. Nothing to do!"
-          exit 1
+          raise AttrMasker::Error, "ActiveRecord undefined. Nothing to do!"
         end
 
         # Do not want production environment to be masked!
         #
         if Rails.env.production?
-          Rails.logger.warn "Why are you masking me?! :("
-          exit 1
+          raise AttrMasker::Error, "Attempted to run in production environment."
         end
 
         all_models.each do |klass|
