@@ -18,7 +18,6 @@ module AttrMasker
           next if klass.masker_attributes.empty?
           mask_class(klass)
         end
-        puts "All done!"
       end
 
       private
@@ -35,8 +34,6 @@ module AttrMasker
       # For each masker attribute, mask it, and save it!
       #
       def mask_object(instance)
-        printf "\n --> masking #{instance.id} - #{instance}... "
-
         klass = instance.class
 
         updates = klass.masker_attributes.reduce({}) do |acc, masker_attr|
@@ -47,8 +44,6 @@ module AttrMasker
         end
 
         klass.all.update(instance.id, updates)
-
-        printf "OK"
       end
 
       def progressbar_for_model(klass)
