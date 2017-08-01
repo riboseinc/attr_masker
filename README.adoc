@@ -108,7 +108,8 @@ Example:
 attr_masker :first_name
 attr_masker :last_name, :masker => AttrMasker::Maskers::SIMPLE
 ----
-+ Would set both `first_name` and `last_name` attributes to `"(redacted)"`.
++
+Would set both `first_name` and `last_name` attributes to `"(redacted)"`.
 
 `AttrMasker::Maskers::Replacing`::
 +
