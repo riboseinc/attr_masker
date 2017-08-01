@@ -177,6 +177,23 @@ RSpec.describe "Attr Masker gem", :suppress_stdout do
     )
   end
 
+  example "It is disabled in production environment" do
+    allow(Rails).to receive(:env) { "production".inquiry }
+
+    User.class_eval do
+      attr_masker :last_name
+    end
+
+    expect { run_rake_task }.to(
+      preserve { User.count } &
+      raise_exception(AttrMasker::Error)
+    )
+
+    [han, luke].each do |record|
+      expect { record.reload }.not_to(change { record })
+    end
+  end
+
   def run_rake_task
     Rake::Task["db:mask"].execute
   end
