@@ -4,6 +4,7 @@
 # Adds attr_accessors that mask an object's attributes
 module AttrMasker
   autoload :Version, "attr_masker/version"
+  autoload :Attribute, "attr_masker/attribute"
 
   autoload :Error, "attr_masker/error"
   autoload :Performer, "attr_masker/performer"
@@ -89,7 +90,7 @@ module AttrMasker
     }.merge!(attr_masker_options).merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
 
     attributes.each do |attribute|
-      masker_attributes[attribute.to_sym] = options.merge(attribute: attribute.to_sym)
+      masker_attributes[attribute.to_sym] = Attribute.new(attribute, self, options)
     end
   end
 
@@ -128,7 +129,7 @@ module AttrMasker
   #
   #   masker_email = User.mask(:email, 'test@example.com')
   def mask(attribute, value, options = {})
-    options = masker_attributes[attribute.to_sym].merge(options)
+    options = masker_attributes[attribute.to_sym].options.merge(options)
     # if options[:if] && !options[:unless] && !value.nil? && !(value.is_a?(String) && value.empty?)
     if options[:if] && !options[:unless]
       value = options[:marshal] ? options[:marshaler].send(options[:load_method], value) : value
@@ -199,7 +200,7 @@ module AttrMasker
       # Returns attr_masker options evaluated in the current object's scope for the attribute specified
       # XXX:Keep
       def evaluated_attr_masker_options_for(attribute)
-        self.class.masker_attributes[attribute.to_sym].inject({}) do |hash, (option, value)|
+        self.class.masker_attributes[attribute.to_sym].options.inject({}) do |hash, (option, value)|
           if %i[if unless].include?(option)
             hash.merge!(option => evaluate_attr_masker_option(value))
           else
