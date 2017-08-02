@@ -28,6 +28,7 @@ RSpec.describe "Attr Masker gem", :suppress_progressbar do
       first_name: "Han",
       last_name: "Solo",
       email: "han@example.test",
+      avatar: Marshal.dump("Millenium Falcon photo"),
     )
   end
 
@@ -36,6 +37,7 @@ RSpec.describe "Attr Masker gem", :suppress_progressbar do
       first_name: "Luke",
       last_name: "Skywalker",
       email: "luke@jedi.example.test",
+      avatar: Marshal.dump("photo with a light saber"),
     )
   end
 
@@ -178,6 +180,76 @@ RSpec.describe "Attr Masker gem", :suppress_progressbar do
       change { luke.last_name }.to("SKYWALKER") &
       preserve { luke.email }
     )
+  end
+
+  example "Masking a marshalled attribute" do
+    User.class_eval do
+      attr_masker :avatar, marshal: true
+    end
+
+    expect { run_rake_task }.not_to(change { User.count })
+
+    expect { han.reload }.to(
+      preserve { han.first_name } &
+      preserve { han.last_name } &
+      preserve { han.email } &
+      change { han.avatar }
+    )
+
+    expect(han.avatar).to eq(Marshal.dump("(redacted)"))
+
+    expect { luke.reload }.to(
+      preserve { luke.first_name } &
+      preserve { luke.last_name } &
+      preserve { luke.email } &
+      change { luke.avatar }
+    )
+
+    expect(luke.avatar).to eq(Marshal.dump("(redacted)"))
+  end
+
+  example "Masking a marshalled attribute with a custom marshaller" do
+    module CustomMarshal
+      module_function
+
+      def load_marshalled(*args)
+        Marshal.load(*args) # rubocop:disable Security/MarshalLoad
+      end
+
+      def dump_json(*args)
+        JSON.dump(json: args)
+      end
+    end
+
+    User.class_eval do
+      attr_masker(
+        :avatar,
+        marshal: true,
+        marshaler: CustomMarshal,
+        load_method: :load_marshalled,
+        dump_method: :dump_json,
+      )
+    end
+
+    expect { run_rake_task }.not_to(change { User.count })
+
+    expect { han.reload }.to(
+      preserve { han.first_name } &
+      preserve { han.last_name } &
+      preserve { han.email } &
+      change { han.avatar }
+    )
+
+    expect(han.avatar).to eq({ json: ["(redacted)"] }.to_json)
+
+    expect { luke.reload }.to(
+      preserve { luke.first_name } &
+      preserve { luke.last_name } &
+      preserve { luke.email } &
+      change { luke.avatar }
+    )
+
+    expect(luke.avatar).to eq({ json: ["(redacted)"] }.to_json)
   end
 
   example "It is disabled in production environment" do
