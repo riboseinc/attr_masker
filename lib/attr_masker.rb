@@ -131,9 +131,9 @@ module AttrMasker
     options = masker_attributes[attribute.to_sym].merge(options)
     # if options[:if] && !options[:unless] && !value.nil? && !(value.is_a?(String) && value.empty?)
     if options[:if] && !options[:unless]
-      value = options[:marshal] ? options[:marshaler].send(options[:dump_method], value) : value.to_s
+      value = options[:marshal] ? options[:marshaler].send(options[:load_method], value) : value
       masker_value = options[:masker].call(options.merge!(value: value))
-      masker_value
+      options[:marshal] ? options[:marshaler].send(options[:dump_method], masker_value) : masker_value
     else
       value
     end
