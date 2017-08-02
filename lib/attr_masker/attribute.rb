@@ -11,5 +11,9 @@ module AttrMasker
       @model = model
       @options = options
     end
+
+    def column_name
+      options[:column_name] || name
+    end
   end
 end

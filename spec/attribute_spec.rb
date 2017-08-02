@@ -15,4 +15,19 @@ RSpec.describe AttrMasker::Attribute do
       expect(retval.options).to eq(opts)
     end
   end
+
+  describe "#column_name" do
+    subject { receiver.method :column_name }
+    let(:receiver) { described_class.new :some_attr, :some_model, options }
+    let(:options) { {} }
+
+    it "defaults to attribute name" do
+      expect(subject.call).to eq(:some_attr)
+    end
+
+    it "can be overriden with :column_name option" do
+      options[:column_name] = :some_column
+      expect(subject.call).to eq(:some_column)
+    end
+  end
 end
