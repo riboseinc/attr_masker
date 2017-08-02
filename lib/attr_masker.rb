@@ -129,7 +129,8 @@ module AttrMasker
   #
   #   masker_email = User.mask(:email, 'test@example.com')
   def mask(attribute, value, options = {})
-    options = masker_attributes[attribute.to_sym].options.merge(options)
+    attribute = masker_attributes[attribute.to_sym]
+    options = attribute.options.merge(options)
     # if options[:if] && !options[:unless] && !value.nil? && !(value.is_a?(String) && value.empty?)
     if options[:if] && !options[:unless]
       value = options[:marshal] ? options[:marshaler].send(options[:load_method], value) : value
@@ -199,8 +200,9 @@ module AttrMasker
 
       # Returns attr_masker options evaluated in the current object's scope for the attribute specified
       # XXX:Keep
-      def evaluated_attr_masker_options_for(attribute)
-        self.class.masker_attributes[attribute.to_sym].options.inject({}) do |hash, (option, value)|
+      def evaluated_attr_masker_options_for(attribute_name)
+        attribute = self.class.masker_attributes[attribute_name.to_sym]
+        attribute.options.inject({}) do |hash, (option, value)|
           if %i[if unless].include?(option)
             hash.merge!(option => evaluate_attr_masker_option(value))
           else
