@@ -204,24 +204,10 @@ module AttrMasker
         attribute = self.class.masker_attributes[attribute_name.to_sym]
         attribute.options.inject({}) do |hash, (option, value)|
           if %i[if unless].include?(option)
-            hash.merge!(option => evaluate_attr_masker_option(value))
+            hash.merge!(option => attribute.evaluate_option(option, self))
           else
             hash.merge!(option => value)
           end
-        end
-      end
-
-      # Evaluates symbol (method reference) or proc (responds to call) options
-      # XXX:Keep
-      #
-      # If the option is not a symbol or proc then the original option is returned
-      def evaluate_attr_masker_option(option)
-        if option.is_a?(Symbol) && respond_to?(option)
-          send(option)
-        elsif option.respond_to?(:call)
-          option.call(self)
-        else
-          option
         end
       end
   end
