@@ -118,27 +118,6 @@ module AttrMasker
     masker_attributes.has_key?(attribute.to_sym)
   end
 
-  # masks a value for the attribute specified
-  # XXX:modify
-  #
-  # Example
-  #
-  #   class User
-  #     attr_masker :email
-  #   end
-  #
-  #   masker_email = User.mask(:email, 'test@example.com')
-  def mask(attribute, value, options = {})
-    attribute = masker_attributes[attribute.to_sym]
-    if options[:if] && !options[:unless]
-      value = attribute.unmarshal_data(value)
-      masker_value = options[:masker].call(options.merge!(value: value))
-      attribute.marshal_data(masker_value)
-    else
-      value
-    end
-  end
-
   # Contains a hash of masker attributes with virtual attribute names as keys
   # and their corresponding options as values
   # XXX:Keep
@@ -191,7 +170,15 @@ module AttrMasker
     #  @user.mask(:email, 'test@example.com')
     def mask(attribute_name, value=nil)
       value = self.send(attribute_name) if value.nil?
-      self.class.mask(attribute_name, value, evaluated_attr_masker_options_for(attribute_name))
+      attribute = self.class.masker_attributes[attribute_name.to_sym]
+      options = evaluated_attr_masker_options_for(attribute_name)
+      if options[:if] && !options[:unless]
+        value = attribute.unmarshal_data(value)
+        masker_value = options[:masker].call(options.merge!(value: value))
+        attribute.marshal_data(masker_value)
+      else
+        value
+      end
     end
 
     protected
