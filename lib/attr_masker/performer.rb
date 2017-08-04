@@ -37,6 +37,8 @@ module AttrMasker
         klass = instance.class
 
         updates = klass.masker_attributes.values.reduce({}) do |acc, attribute|
+          next acc unless attribute.should_mask?(instance)
+
           attr_name = attribute.name
           column_name = attribute.column_name
           masker_value = instance.mask(attr_name)
