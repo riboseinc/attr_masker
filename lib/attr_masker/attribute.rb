@@ -12,6 +12,16 @@ module AttrMasker
       @options = options
     end
 
+    # Evaluates the +:if+ and +:unless+ attribute options on given instance.
+    # Returns +true+ or +fasle+, depending on whether the attribute should be
+    # masked for this object or not.
+    def should_mask?(model_instance)
+      not (
+        options.key?(:if) && !evaluate_option(:if, model_instance) ||
+        options.key?(:unless) && evaluate_option(:unless, model_instance)
+      )
+    end
+
     # Evaluates option (typically +:if+ or +:unless+) on given model instance.
     # That option can be either a proc (a model is passed as an only argument),
     # or a symbol (a method of that name is called on model instance).

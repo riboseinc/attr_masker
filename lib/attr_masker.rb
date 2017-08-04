@@ -172,7 +172,7 @@ module AttrMasker
       value = self.send(attribute_name) if value.nil?
       attribute = self.class.masker_attributes[attribute_name.to_sym]
       options = evaluated_attr_masker_options_for(attribute_name)
-      if options[:if] && !options[:unless]
+      if attribute.should_mask?(self)
         value = attribute.unmarshal_data(value)
         masker_value = options[:masker].call(options.merge!(value: value))
         attribute.marshal_data(masker_value)
