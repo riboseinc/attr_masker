@@ -3,7 +3,8 @@ module AttrMasker
     def self.extended(base) # :nodoc:
       base.class_eval do
         attr_writer :attr_masker_options
-        @attr_masker_options, @masker_attributes = {}, {}
+        @attr_masker_options = {}
+        @masker_attributes = {}
       end
     end
 
