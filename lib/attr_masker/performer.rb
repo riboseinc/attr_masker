@@ -36,9 +36,9 @@ module AttrMasker
       def mask_object(instance)
         klass = instance.class
 
-        updates = klass.masker_attributes.reduce({}) do |acc, masker_attr|
-          attr_name = masker_attr[0]
-          column_name = masker_attr[1].column_name
+        updates = klass.masker_attributes.values.reduce({}) do |acc, attribute|
+          attr_name = attribute.name
+          column_name = attribute.column_name
           masker_value = instance.mask(attr_name)
           acc.merge!(column_name => masker_value)
         end
