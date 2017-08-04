@@ -171,7 +171,7 @@ module AttrMasker
     def mask(attribute_name, value=nil)
       value = self.send(attribute_name) if value.nil?
       attribute = self.class.masker_attributes[attribute_name.to_sym]
-      options = evaluated_attr_masker_options_for(attribute_name)
+      options = attribute.options
       if attribute.should_mask?(self)
         value = attribute.unmarshal_data(value)
         masker_value = options[:masker].call(options.merge!(value: value))
@@ -180,21 +180,6 @@ module AttrMasker
         value
       end
     end
-
-    protected
-
-      # Returns attr_masker options evaluated in the current object's scope for the attribute specified
-      # XXX:Keep
-      def evaluated_attr_masker_options_for(attribute_name)
-        attribute = self.class.masker_attributes[attribute_name.to_sym]
-        attribute.options.inject({}) do |hash, (option, value)|
-          if %i[if unless].include?(option)
-            hash.merge!(option => attribute.evaluate_option(option, self))
-          else
-            hash.merge!(option => value)
-          end
-        end
-      end
   end
 end
 
