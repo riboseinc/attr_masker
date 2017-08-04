@@ -17,9 +17,6 @@ module AttrMasker
   require "attr_masker/railtie" if defined?(Rails)
   def self.extended(base) # :nodoc:
     base.class_eval do
-
-      # Only include the dangerous instance methods during the Rake task!
-      include InstanceMethods
       attr_writer :attr_masker_options
       @attr_masker_options, @masker_attributes = {}, {}
     end
@@ -131,25 +128,6 @@ module AttrMasker
   #   User.masker_attributes # { :email => { :attribute => 'masker_email' } }
   def masker_attributes
     @masker_attributes ||= superclass.masker_attributes.dup
-  end
-
-  module InstanceMethods
-
-    # masks a value for the attribute specified using options evaluated in the current object's scope
-    #
-    # Example
-    #
-    #  class User
-    #    attr_accessor :secret_key
-    #    attr_masker :email
-    #
-    #    def initialize(secret_key)
-    #      self.secret_key = secret_key
-    #    end
-    #  end
-    #
-    #  @user = User.new('some-secret-key')
-    #  @user.mask(:email, 'test@example.com')
   end
 end
 
