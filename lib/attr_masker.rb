@@ -191,9 +191,9 @@ module AttrMasker
     #
     #  @user = User.new('some-secret-key')
     #  @user.mask(:email, 'test@example.com')
-    def mask(attribute, value=nil)
-      value = self.send(attribute) if value.nil?
-      self.class.mask(attribute, value, evaluated_attr_masker_options_for(attribute))
+    def mask(attribute_name, value=nil)
+      value = self.send(attribute_name) if value.nil?
+      self.class.mask(attribute_name, value, evaluated_attr_masker_options_for(attribute_name))
     end
 
     protected
