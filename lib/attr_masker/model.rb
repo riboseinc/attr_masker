@@ -72,8 +72,8 @@ module AttrMasker
     #   @user.masker_configuration # returns the masker version of configuration
     #
     #   See README for more examples
-    def attr_masker(*attributes)
-      options = {
+    def attr_masker(*args)
+      default_options = {
         :if               => true,
         :unless           => false,
         :column_name      => nil,
@@ -82,10 +82,15 @@ module AttrMasker
         :dump_method      => "dump",
         :load_method      => "load",
         :masker           => AttrMasker::Maskers::SIMPLE,
-      }.merge!(attr_masker_options).merge!(attributes.last.is_a?(Hash) ? attributes.pop : {})
+      }
 
-      attributes.each do |attribute|
-        masker_attributes[attribute.to_sym] = Attribute.new(attribute, self, options)
+      options = args.extract_options!.
+        reverse_merge(attr_masker_options).
+        reverse_merge(default_options)
+
+      args.each do |attribute_name|
+        attribute = Attribute.new(attribute_name, self, options)
+        masker_attributes[attribute.name] = attribute
       end
     end
 
