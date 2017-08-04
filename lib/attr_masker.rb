@@ -133,24 +133,6 @@ module AttrMasker
     @masker_attributes ||= superclass.masker_attributes.dup
   end
 
-  # Forwards calls to :mask_#{attribute} to the corresponding mask method
-  # if attribute was configured with attr_masker
-  #
-  # Example
-  #
-  #   class User
-  #     attr_masker :email
-  #   end
-  #
-  #   User.mask_email('SOME_masker_EMAIL_STRING')
-  def method_missing(method, *arguments, &block)
-    if method.to_s =~ /^mask_(.+)$/ && attr_masker?($1)
-      send(:mask, $1, *arguments)
-    else
-      super
-    end
-  end
-
   module InstanceMethods
 
     # masks a value for the attribute specified using options evaluated in the current object's scope
@@ -168,14 +150,6 @@ module AttrMasker
     #
     #  @user = User.new('some-secret-key')
     #  @user.mask(:email, 'test@example.com')
-    def mask(attribute_name)
-      value = self.send(attribute_name)
-      attribute = self.class.masker_attributes[attribute_name.to_sym]
-      options = attribute.options
-      value = attribute.unmarshal_data(value)
-      masker_value = options[:masker].call(options.merge!(value: value))
-      attribute.marshal_data(masker_value)
-    end
   end
 end
 

@@ -22,6 +22,22 @@ module AttrMasker
       )
     end
 
+    # Mask the attribute on given model.  Masking will be performed regardless
+    # of +:if+ and +:unless+ options.  A +should_mask?+ method should be called
+    # separately to ensure that given object is eligible for masking.
+    #
+    # The method returns the masked value but does not modify the object's
+    # attribute.
+    #
+    # If +marshal+ attribute's option is +true+, the attribute value will be
+    # loaded before masking, and dumped to proper storage format prior
+    # returning.
+    def mask(model_instance)
+      value = unmarshal_data(model_instance.send(name))
+      masker_value = options[:masker].call(options.merge!(value: value))
+      marshal_data(masker_value)
+    end
+
     # Evaluates option (typically +:if+ or +:unless+) on given model instance.
     # That option can be either a proc (a model is passed as an only argument),
     # or a symbol (a method of that name is called on model instance).
