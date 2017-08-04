@@ -74,6 +74,8 @@ module AttrMasker
     #
     #   See README for more examples
     def attr_masker(*args)
+      # Hash rockets make these things readable for real
+      # rubocop:disable Style/HashSyntax
       default_options = {
         :if               => true,
         :unless           => false,
@@ -84,6 +86,7 @@ module AttrMasker
         :load_method      => "load",
         :masker           => AttrMasker::Maskers::SIMPLE,
       }
+      # rubocop:enable Style/HashSyntax
 
       options = args.extract_options!.
         reverse_merge(attr_masker_options).
