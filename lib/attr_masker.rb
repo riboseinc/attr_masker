@@ -131,7 +131,6 @@ module AttrMasker
   def mask(attribute, value, options = {})
     attribute = masker_attributes[attribute.to_sym]
     options = attribute.options.merge(options)
-    # if options[:if] && !options[:unless] && !value.nil? && !(value.is_a?(String) && value.empty?)
     if options[:if] && !options[:unless]
       value = attribute.unmarshal_data(value)
       masker_value = options[:masker].call(options.merge!(value: value))
