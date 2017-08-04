@@ -63,4 +63,42 @@ RSpec.describe AttrMasker::Attribute do
       end
     end
   end
+
+  describe "#marshal_data" do
+    subject { receiver.method :marshal_data }
+    let(:receiver) { described_class.new :some_attr, model_instance, options }
+    let(:options) { { marshaler: marshaller, dump_method: :dump_m } }
+    let(:marshaller) { double }
+    let(:model_instance) { double }
+
+    it "returns unmodified argument when marshal option is falsey" do
+      options[:marshal] = false
+      expect(subject.call(:data)).to be(:data)
+    end
+
+    it "returns unmodified argument when marshal option is falsey" do
+      options[:marshal] = true
+      expect(marshaller).to receive(:dump_m).with(:data).and_return(:retval)
+      expect(subject.call(:data)).to be(:retval)
+    end
+  end
+
+  describe "#unmarshal_data" do
+    subject { receiver.method :unmarshal_data }
+    let(:receiver) { described_class.new :some_attr, model_instance, options }
+    let(:options) { { marshaler: marshaller, load_method: :load_m } }
+    let(:marshaller) { double }
+    let(:model_instance) { double }
+
+    it "returns unmodified argument when marshal option is falsey" do
+      options[:marshal] = false
+      expect(subject.call(:data)).to be(:data)
+    end
+
+    it "returns unmodified argument when marshal option is falsey" do
+      options[:marshal] = true
+      expect(marshaller).to receive(:load_m).with(:data).and_return(:retval)
+      expect(subject.call(:data)).to be(:retval)
+    end
+  end
 end
