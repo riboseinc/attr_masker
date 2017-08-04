@@ -168,8 +168,8 @@ module AttrMasker
     #
     #  @user = User.new('some-secret-key')
     #  @user.mask(:email, 'test@example.com')
-    def mask(attribute_name, value=nil)
-      value = self.send(attribute_name) if value.nil?
+    def mask(attribute_name)
+      value = self.send(attribute_name)
       attribute = self.class.masker_attributes[attribute_name.to_sym]
       options = attribute.options
       if attribute.should_mask?(self)
