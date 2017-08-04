@@ -31,6 +31,30 @@ RSpec.describe AttrMasker::Attribute do
     end
   end
 
+  describe "#should_mask?" do
+    subject { described_class.instance_method :should_mask? }
+
+    let(:model_instance) { double }
+    let(:truthy) { double call: true }
+    let(:falsey) { double call: false }
+
+    example { expect(retval_for_opts({})).to be(true) }
+    example { expect(retval_for_opts(if: truthy)).to be(true) }
+    example { expect(retval_for_opts(if: falsey)).to be(false) }
+    example { expect(retval_for_opts(unless: truthy)).to be(false) }
+    example { expect(retval_for_opts(unless: falsey)).to be(true) }
+    example { expect(retval_for_opts(if: truthy, unless: truthy)).to be(false) }
+    example { expect(retval_for_opts(if: truthy, unless: falsey)).to be(true) }
+    example { expect(retval_for_opts(if: falsey, unless: truthy)).to be(false) }
+    example { expect(retval_for_opts(if: falsey, unless: falsey)).to be(false) }
+
+    def retval_for_opts(opts)
+      receiver = described_class.new(:some_attr, :some_model, opts)
+      callable = subject.bind(receiver)
+      callable.(model_instance)
+    end
+  end
+
   describe "#evaluate_option" do
     subject { receiver.method :evaluate_option }
     let(:receiver) { described_class.new :some_attr, model_instance, options }
