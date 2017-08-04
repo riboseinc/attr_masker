@@ -12,31 +12,44 @@ module AttrMasker
     # Options (any other options you specify are passed to the masker's mask
     # methods)
     #
-    # [:masker]              The object to use for masking. It must respond to +#mask+. Defaults to AttrMasker::Maskers::Simple.
+    # [:masker]
+    #     The object to use for masking. It must respond to +#mask+. Defaults to
+    #     AttrMasker::Maskers::Simple.
     #
-    # [:if]                  Attributes are only masker if this option evaluates to true. If you pass a symbol representing an instance
-    #                        method then the result of the method will be evaluated. Any objects that respond to <tt>:call</tt> are evaluated as well.
-    #                        Defaults to true.
+    # [:if]
+    #     Attributes are only masker if this option evaluates to true. If you
+    #     pass a symbol representing an instance method then the result of
+    #     the method will be evaluated. Any objects that respond to
+    #     <tt>:call</tt> are evaluated as well.  Defaults to true.
     #
-    # [:unless]              Attributes are only masker if this option evaluates to false. If you pass a symbol representing an instance
-    #                        method then the result of the method will be evaluated. Any objects that respond to <tt>:call</tt> are evaluated as well.
-    #                        Defaults to false.
+    # [:unless]
+    #     Attributes are only masker if this option evaluates to false. If you
+    #     pass a symbol representing an instance method then the result of
+    #     the method will be evaluated. Any objects that respond to
+    #     <tt>:call</tt> are evaluated as well.  Defaults to false.
     #
-    # [:marshal]             If set to true, attributes will be marshaled as well as masker. This is useful if you're planning
-    #                        on masking something other than a string. Defaults to false unless you're using it with ActiveRecord
-    #                        or DataMapper.
+    # [:marshal]
+    #     If set to true, attributes will be marshaled as well as masker. This
+    #     is useful if you're planning on masking something other than a string.
+    #     Defaults to false unless you're using it with ActiveRecord or
+    #     DataMapper.
     #
-    # [:marshaler]           The object to use for marshaling. Defaults to Marshal.
+    # [:marshaler]
+    #     The object to use for marshaling. Defaults to Marshal.
     #
-    # [:dump_method]         The dump method name to call on the <tt>:marshaler</tt> object to. Defaults to 'dump'.
+    # [:dump_method]
+    #     The dump method name to call on the <tt>:marshaler</tt> object to.
+    #     Defaults to 'dump'.
     #
-    # [:load_method]         The load method name to call on the <tt>:marshaler</tt> object. Defaults to 'load'.
+    # [:load_method]
+    #     The load method name to call on the <tt>:marshaler</tt> object.
+    #     Defaults to 'load'.
     #
     # You can specify your own default options
     #
     #   class User
     #     # now all attributes will be encoded and marshaled by default
-    #     attr_masker_options.merge!(:marshal => true, :some_other_option => true)
+    #     attr_masker_options.merge!(:marshal => true, :another_option => true)
     #     attr_masker :configuration
     #   end
     #
