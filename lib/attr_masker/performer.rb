@@ -24,7 +24,7 @@ module AttrMasker
 
       def mask_class(klass)
         progressbar_for_model(klass) do |bar|
-          klass.all.each do |model|
+          klass.all.unscoped.each do |model|
             mask_object model
             bar.increment
           end
@@ -44,13 +44,13 @@ module AttrMasker
           acc.merge!(column_name => masker_value)
         end
 
-        klass.all.update(instance.id, updates)
+        klass.all.unscoped.update(instance.id, updates)
       end
 
       def progressbar_for_model(klass)
         bar = ProgressBar.create(
           title: klass.name,
-          total: klass.count,
+          total: klass.unscoped.count,
           throttle_rate: 0.1,
           format: %q[%t %c/%C (%j%%) %B %E],
         )

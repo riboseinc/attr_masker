@@ -269,6 +269,22 @@ RSpec.describe "Attr Masker gem", :suppress_progressbar do
     end
   end
 
+  example "It masks records disregarding default scope" do
+    User.class_eval do
+      attr_masker :last_name
+
+      default_scope ->() { where(last_name: "Solo") }
+    end
+
+    expect { run_rake_task }.not_to(change { User.unscoped.count })
+
+    [han, luke].each do |record|
+      expect { record.reload }.to(
+        change { record.last_name }.to("(redacted)")
+      )
+    end
+  end
+
   def run_rake_task
     Rake::Task["db:mask"].execute
   end
