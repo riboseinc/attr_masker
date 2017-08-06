@@ -1,0 +1,15 @@
+== Not released yet
+
+* Mask records disregarding default scope
+  (https://github.com/riboseinc/attr_masker/pull/41[#41])
+* Major refactoring (extracting `Attribute` and `Model` classes)
+* Code style improvements (nearly all violations fixed)
+
+== 0.1
+
+* First useful version
+* Rails 4 & 5 compatibility
+* Callable objects as maskers
+* Nice progress bar
+* Built-in maskers: `AttrMasker::Maskers::Replacing`
+  and `AttrMasker::Maskers::SIMPLE`
