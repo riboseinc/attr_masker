@@ -1,4 +1,4 @@
-== Not released yet
+== 0.1.1
 
 * Mask records disregarding default scope
   (https://github.com/riboseinc/attr_masker/pull/41[#41])
