@@ -1,26 +1,20 @@
 # (c) 2017 Ribose Inc.
 #
 
-# No point in using ApplicationRecord here.
-# rubocop:disable Rails/ApplicationRecord
-
 # No point in ensuring a trailing comma in multiline argument lists here.
 # rubocop:disable Style/TrailingCommaInArguments
 
 require "spec_helper"
 
-RSpec.describe "Attr Masker gem", :suppress_progressbar do
+RSpec.shared_examples "Attr Masker gem feature specs" do
   before do
-    stub_const "User", Class.new(ActiveRecord::Base)
+    stub_const "User", user_class_definition
 
     User.class_eval do
       def jedi?
         email.ends_with? "@jedi.example.test"
       end
     end
-
-    allow(ActiveRecord::Base).to receive(:descendants).
-      and_return([ActiveRecord::SchemaMigration, User])
   end
 
   let!(:han) do
