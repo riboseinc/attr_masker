@@ -1,0 +1,33 @@
+# Heavily based on Mongoid's test suite
+# https://github.com/mongodb/mongoid/blob/v6.2.0/spec/config/mongoid.yml
+test:
+  clients:
+    default:
+      database: attr_masker_test
+      hosts:
+        - <%=ENV["MONGOID_SPEC_HOST"]%>:<%=ENV["MONGOID_SPEC_PORT"]%>
+      options:
+        auth_source: "admin"
+        read:
+          mode: :primary_preferred
+          tag_sets:
+            - use: web
+        max_pool_size: 1
+    reports:
+      database: reports
+      hosts:
+        - <%=ENV["MONGOID_SPEC_HOST"]%>:<%=ENV["MONGOID_SPEC_PORT"]%>
+      options:
+        user: "mongoid-user"
+        password: "password"
+        auth_source: "admin"
+  options:
+    include_root_in_json: false
+    include_type_for_serialization: false
+    preload_models: false
+    scope_overwrite_exception: false
+    raise_not_found_error: true
+    use_activesupport_time_zone: true
+    use_utc: false
+    log_level: :warn
+    app_name: 'testing'
