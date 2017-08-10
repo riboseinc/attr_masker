@@ -44,7 +44,11 @@ module AttrMasker
           acc.merge!(column_name => masker_value)
         end
 
-        klass.all.unscoped.update(instance.id, updates)
+        make_update instance, updates
+      end
+
+      def make_update(instance, updates)
+        instance.class.all.unscoped.update(instance.id, updates)
       end
 
       def progressbar_for_model(klass)
