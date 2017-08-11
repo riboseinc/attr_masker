@@ -2,4 +2,4 @@
 #
 
 Combustion.path = "spec/dummy"
-Combustion.initialize! :all
+Combustion.initialize! :active_record
