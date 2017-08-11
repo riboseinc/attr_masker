@@ -6,7 +6,9 @@ RSpec.configure do |config|
     # Since models are defined dynamically in specs, Database Cleaner is unable
     # to list them and to determine collection names to be cleaned.
     # Therefore, they are specified explicitly here.
-    DatabaseCleaner[:mongoid].strategy = :truncation, { only: "users" }
+    unless ENV["WITHOUT_MONGOID"]
+      DatabaseCleaner[:mongoid].strategy = :truncation, { only: "users" }
+    end
 
     DatabaseCleaner.clean_with(:truncation)
   end
