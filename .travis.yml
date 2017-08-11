@@ -7,6 +7,9 @@ services:
   - mongodb
 
 script:
+  # Arbitrary sleep to prevent from some Mongoid issues
+  # https://docs.travis-ci.com/user/database-setup/#MongoDB-does-not-immediately-accept-connections
+  - sleep 25
   - bundle exec rspec
 
 rvm:
