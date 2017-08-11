@@ -1,6 +1,4 @@
-source "https://rubygems.org"
+eval File.read "gemfiles/common.gemfile"
 
 gem "activerecord", github: "rails/rails"
 gem "arel", github: "rails/arel"
-
-gemspec path: ".."
