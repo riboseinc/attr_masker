@@ -9,6 +9,14 @@ require_relative "shared_examples"
 RSpec.describe "Attr Masker gem", :suppress_progressbar do
   context "when used with ActiveRecord" do
     before do
+      if ENV["WITHOUT_ACTIVE_RECORD"]
+        expect(defined?(::ActiveRecord)).to be(nil)
+        skip "Active Record specs disabled with WITHOUT_ACTIVE_RECORD shell " \
+          "variable"
+      end
+    end
+
+    before do
       allow(ActiveRecord::Base).to receive(:descendants).
         and_return([ActiveRecord::SchemaMigration, user_class_definition])
     end

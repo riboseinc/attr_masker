@@ -2,4 +2,9 @@
 #
 
 Combustion.path = "spec/dummy"
-Combustion.initialize! :active_record
+
+if ENV["WITHOUT_ACTIVE_RECORD"].nil?
+  Combustion.initialize! :active_record
+else
+  Combustion.initialize!
+end

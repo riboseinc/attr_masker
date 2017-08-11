@@ -32,6 +32,10 @@ matrix:
     - rvm: "2.4"
       gemfile: "gemfiles/Rails-5.1.gemfile"
       env:
+        - WITHOUT_ACTIVE_RECORD: "1"
+    - rvm: "2.4"
+      gemfile: "gemfiles/Rails-5.1.gemfile"
+      env:
         - WITHOUT_MONGOID: "1"
 
   allow_failures:
