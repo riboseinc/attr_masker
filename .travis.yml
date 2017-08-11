@@ -3,6 +3,9 @@ dist: trusty
 language: ruby
 before_install: gem install bundler -v 1.15.1
 
+services:
+  - mongodb
+
 script:
   - bundle exec rspec
 
