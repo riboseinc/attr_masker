@@ -82,7 +82,7 @@ module AttrMasker
         marshaler: Marshal,
         dump_method: "dump",
         load_method: "load",
-        masker: AttrMasker::Maskers::SIMPLE,
+        masker: AttrMasker::Maskers::Simple.new,
       }
 
       options = args.extract_options!.
