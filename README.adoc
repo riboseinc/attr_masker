@@ -6,13 +6,13 @@
 image:https://img.shields.io/gem/v/attr_masker.svg["Gem Version", link="https://rubygems.org/gems/attr_masker"]
 image:https://img.shields.io/travis/riboseinc/attr_masker/master.svg["Build Status", link="https://travis-ci.org/riboseinc/attr_masker"]
 
-Mask ActiveRecord data with ease!
+Mask ActiveRecord/Mongoid data with ease!
 
 == Introduction
 
 This gem is intended to mask sensitive data so that production database dumps
-can be used in staging or test environments.  It works with Active Record 4+
-and modern Rubies.
+can be used in staging or test environments.  It works with Rails 4+ and modern
+Rubies.  It supports Active Record and Mongoid models.
 
 == Getting started
 
