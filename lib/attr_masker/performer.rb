@@ -70,5 +70,15 @@ module AttrMasker
         instance.class.all.unscoped.update(instance.id, updates)
       end
     end
+
+    class Mongoid < Base
+      def all_models
+        ::Mongoid.models
+      end
+
+      def make_update(instance, updates)
+        instance.class.all.unscoped.where(id: instance.id).update(updates)
+      end
+    end
   end
 end
