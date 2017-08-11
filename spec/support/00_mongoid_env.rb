@@ -5,3 +5,5 @@
 # that is not on the local machine.
 ENV["MONGOID_SPEC_HOST"] ||= "127.0.0.1"
 ENV["MONGOID_SPEC_PORT"] ||= "27017"
+
+require "mongoid" unless ENV["WITHOUT_MONGOID"]
