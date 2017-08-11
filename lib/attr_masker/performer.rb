@@ -44,7 +44,7 @@ module AttrMasker
           acc.merge!(column_name => masker_value)
         end
 
-        make_update instance, updates
+        make_update instance, updates unless updates.empty?
       end
 
       def progressbar_for_model(klass)
