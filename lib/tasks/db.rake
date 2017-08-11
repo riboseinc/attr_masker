@@ -17,5 +17,6 @@ namespace :db do
   #
   task :mask => :environment do
     AttrMasker::Performer::ActiveRecord.new.mask
+    AttrMasker::Performer::Mongoid.new.mask
   end
 end
