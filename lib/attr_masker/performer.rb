@@ -2,7 +2,7 @@
 #
 module AttrMasker
   module Performer
-    class ActiveRecord
+    class Base
       def mask
         unless defined? ::ActiveRecord
           raise AttrMasker::Error, "ActiveRecord undefined. Nothing to do!"
@@ -47,10 +47,6 @@ module AttrMasker
         make_update instance, updates
       end
 
-      def make_update(instance, updates)
-        instance.class.all.unscoped.update(instance.id, updates)
-      end
-
       def progressbar_for_model(klass)
         bar = ProgressBar.create(
           title: klass.name,
@@ -63,9 +59,15 @@ module AttrMasker
       ensure
         bar.finish
       end
+    end
 
+    class ActiveRecord < Base
       def all_models
         ::ActiveRecord::Base.descendants.select(&:table_exists?)
+      end
+
+      def make_update(instance, updates)
+        instance.class.all.unscoped.update(instance.id, updates)
       end
     end
   end
