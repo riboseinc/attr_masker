@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# rubocop:disable all
 set -euo pipefail
 IFS=$'\n\t'
 set -vx
