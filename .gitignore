@@ -1,5 +1,6 @@
 /.rspec_status
 /.ruby-version
 /.ruby-gemset
+/pkg
 /Gemfile.lock
 /spec/dummy/log/*.log
