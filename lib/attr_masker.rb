@@ -1,6 +1,8 @@
 # (c) 2017 Ribose Inc.
 #
 
+require "ruby-progressbar"
+
 # Adds attr_accessors that mask an object's attributes
 module AttrMasker
   autoload :Version, "attr_masker/version"
