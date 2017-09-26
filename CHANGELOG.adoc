@@ -1,5 +1,10 @@
 == Not released yet
 
+== 0.2.1
+
+* Bugfix: preload application to find all models
+* Bugfix: require all dependencies correctly
+
 == 0.2.0
 
 * `AttrMasker::Maskers::Simple` is now a class
