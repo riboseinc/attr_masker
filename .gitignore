@@ -4,3 +4,4 @@
 /pkg
 /Gemfile.lock
 /spec/dummy/log/*.log
+/coverage

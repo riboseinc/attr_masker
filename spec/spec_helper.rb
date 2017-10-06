@@ -1,6 +1,14 @@
 # (c) 2017 Ribose Inc.
 #
 
+require "simplecov"
+SimpleCov.start
+
+if ENV.key?("CI")
+  require "codecov"
+  SimpleCov.formatter = SimpleCov::Formatter::Codecov
+end
+
 require "bundler"
 Bundler.require :default, :development
 
