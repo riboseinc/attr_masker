@@ -5,6 +5,7 @@
 
 image:https://img.shields.io/gem/v/attr_masker.svg["Gem Version", link="https://rubygems.org/gems/attr_masker"]
 image:https://img.shields.io/travis/riboseinc/attr_masker/master.svg["Build Status", link="https://travis-ci.org/riboseinc/attr_masker"]
+image:https://img.shields.io/codecov/c/github/riboseinc/attr_masker.svg["Test Coverage", link="https://codecov.io/gh/riboseinc/attr_masker"]
 
 Mask ActiveRecord/Mongoid data with ease!
 
