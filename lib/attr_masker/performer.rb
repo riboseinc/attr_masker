@@ -68,7 +68,7 @@ module AttrMasker
       end
 
       def make_update(instance, updates)
-        instance.class.all.unscoped.update(instance.id, updates)
+        instance.class.all.unscoped.where(id: instance.id).update_all(updates)
       end
     end
 
