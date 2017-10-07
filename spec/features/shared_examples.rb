@@ -176,6 +176,34 @@ RSpec.shared_examples "Attr Masker gem feature specs" do
     )
   end
 
+  example "Masked value is assigned via attribute writer" do
+    User.class_eval do
+      attr_masker :first_name, :last_name
+
+      def first_name=(value)
+        self[:first_name] = "#{value} with side effects"
+      end
+
+      def last_name=(value)
+        self[:last_name] = value
+      end
+    end
+
+    expect { run_rake_task }.not_to(change { User.count })
+
+    expect { han.reload }.to(
+      change { han.first_name }.to("(redacted) with side effects") &
+      change { han.last_name }.to("(redacted)") &
+      preserve { han.email }
+    )
+
+    expect { luke.reload }.to(
+      change { luke.first_name }.to("(redacted) with side effects") &
+      change { luke.last_name }.to("(redacted)") &
+      preserve { luke.email }
+    )
+  end
+
   example "Masking a marshalled attribute" do
     User.class_eval do
       attr_masker :avatar, marshal: true

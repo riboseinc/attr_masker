@@ -35,7 +35,7 @@ module AttrMasker
     def mask(model_instance)
       value = unmarshal_data(model_instance.send(name))
       masker_value = options[:masker].call(options.merge!(value: value))
-      marshal_data(masker_value)
+      model_instance.send("#{name}=", marshal_data(masker_value))
     end
 
     # Evaluates option (typically +:if+ or +:unless+) on given model instance.

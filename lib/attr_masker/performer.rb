@@ -36,8 +36,9 @@ module AttrMasker
           next acc unless attribute.should_mask?(instance)
 
           column_name = attribute.column_name
-          masker_value = attribute.mask(instance)
-          acc.merge!(column_name => masker_value)
+          attribute.mask(instance)
+          update = instance.changes[column_name]
+          update.present? ? acc.merge!(column_name => update[1]) : acc
         end
 
         make_update instance, updates unless updates.empty?
