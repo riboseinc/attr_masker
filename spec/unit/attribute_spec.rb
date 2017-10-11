@@ -55,6 +55,35 @@ RSpec.describe AttrMasker::Attribute do
     end
   end
 
+  describe "#masked_attributes_new_values" do
+    subject { receiver.method :masked_attributes_new_values }
+    let(:receiver) { described_class.new :some_attr, :some_model, options }
+    let(:options) { {} }
+    let(:model_instance) { double } # Struct.new(:some_attr, :other_attr) }
+    let(:changes) { { some_attr: [nil, "new"], other_attr: [nil, "other"] } }
+
+    before { allow(model_instance).to receive(:changes).and_return(changes) }
+
+    # rubocop:disable Style/BracesAroundHashParameters
+    # We are comparing hashes here, and we want hash literals
+    it "returns a hash of required database updates which include masked field \
+        change, but ignores other attribute changes" do
+      expect(subject.(model_instance)).to eq({ some_attr: "new" })
+    end
+
+    it "returns an emtpy hash for an unchanged object" do
+      changes.clear
+      expect(subject.(model_instance)).to eq({})
+    end
+
+    it "allows overriding column/field name to be updated with column_name \
+      option" do
+      options[:column_name] = :other_attr
+      expect(subject.(model_instance)).to eq({ other_attr: "other" })
+    end
+    # rubocop:enable Style/BracesAroundHashParameters
+  end
+
   describe "#evaluate_option" do
     subject { receiver.method :evaluate_option }
     let(:receiver) { described_class.new :some_attr, model_instance, options }
