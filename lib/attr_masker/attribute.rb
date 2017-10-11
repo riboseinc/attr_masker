@@ -38,6 +38,13 @@ module AttrMasker
       model_instance.send("#{name}=", marshal_data(masker_value))
     end
 
+    # Returns a hash of maskable attribute names, and respective attribute
+    # values.  Unchanged attributes are skipped.
+    def masked_attributes_new_values(model_instance)
+      value = model_instance.changes[column_name]
+      value.present? ? { column_name => value[1] } : {}
+    end
+
     # Evaluates option (typically +:if+ or +:unless+) on given model instance.
     # That option can be either a proc (a model is passed as an only argument),
     # or a symbol (a method of that name is called on model instance).

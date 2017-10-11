@@ -38,10 +38,8 @@ module AttrMasker
         updates = klass.masker_attributes.values.reduce({}) do |acc, attribute|
           next acc unless attribute.should_mask?(instance)
 
-          column_name = attribute.column_name
           attribute.mask(instance)
-          update = instance.changes[column_name]
-          update.present? ? acc.merge!(column_name => update[1]) : acc
+          acc.merge! attribute.masked_attributes_new_values(instance)
         end
 
         make_update instance, updates unless updates.empty?
