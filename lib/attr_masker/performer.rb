@@ -1,5 +1,8 @@
 # (c) 2017 Ribose Inc.
 #
+
+# rubocop:disable Rails/SkipsModelValidations
+
 module AttrMasker
   module Performer
     class Base
