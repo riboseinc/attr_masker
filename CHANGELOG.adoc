@@ -1,5 +1,9 @@
 == Not released yet
 
+* Drop support for Rails < 4.2
+* Allow masking attributes which span on more than one column (or field),
+  supersede `column_name` option with `column_names`
+
 == 0.2.1
 
 * Bugfix: preload application to find all models
