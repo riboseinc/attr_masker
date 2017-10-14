@@ -16,17 +16,17 @@ RSpec.describe AttrMasker::Attribute do
     end
   end
 
-  describe "#column_name" do
-    subject { receiver.method :column_name }
+  describe "#column_names" do
+    subject { receiver.method :column_names }
     let(:receiver) { described_class.new :some_attr, :some_model, options }
     let(:options) { {} }
 
-    it "defaults to attribute name" do
-      expect(subject.call).to eq(:some_attr)
+    it "defaults to array containing attribute name only" do
+      expect(subject.call).to contain_exactly(:some_attr)
     end
 
-    it "can be overriden with :column_name option" do
-      options[:column_name] = :some_column
+    it "can be overriden with :column_names option" do
+      options[:column_names] = :some_column
       expect(subject.call).to eq(:some_column)
     end
   end

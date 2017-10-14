@@ -69,8 +69,8 @@ module AttrMasker
       options[:marshaler].send(options[:load_method], data)
     end
 
-    def column_name
-      options[:column_name] || name
+    def column_names
+      options[:column_names] || [name]
     end
   end
 end
