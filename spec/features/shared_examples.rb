@@ -274,6 +274,40 @@ RSpec.shared_examples "Attr Masker gem feature specs" do
     expect(luke.avatar).to eq({ json: ["(redacted)"] }.to_json)
   end
 
+  example "Masking an attribute which spans on more than one table column \
+          (or document field)" do
+    User.class_eval do
+      attr_masker :full_name,
+                  column_names: [:first_name, :last_name],
+                  masker: ->(**_) { "(first) (last)" }
+
+      def full_name
+        [first_name, last_name].join(" ")
+      end
+
+      def full_name=(value)
+        self.first_name = value.split(" ")[-2]
+        self.last_name = value.split(" ")[-1]
+      end
+    end
+
+    expect { run_rake_task }.not_to(change { User.count })
+
+    expect { han.reload }.to(
+      change { han.first_name }.to("(first)") &
+      change { han.last_name }.to("(last)") &
+      preserve { han.email } &
+      preserve { han.avatar }
+    )
+
+    expect { luke.reload }.to(
+      change { luke.first_name }.to("(first)") &
+      change { luke.last_name }.to("(last)") &
+      preserve { luke.email } &
+      preserve { luke.avatar }
+    )
+  end
+
   example "It is disabled in production environment" do
     allow(Rails).to receive(:env) { "production".inquiry }
 

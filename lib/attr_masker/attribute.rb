@@ -41,7 +41,7 @@ module AttrMasker
     # Returns a hash of maskable attribute names, and respective attribute
     # values.  Unchanged attributes are skipped.
     def masked_attributes_new_values(model_instance)
-      model_instance.changes.slice(column_name).transform_values(&:second)
+      model_instance.changes.slice(*column_names).transform_values(&:second)
     end
 
     # Evaluates option (typically +:if+ or +:unless+) on given model instance.
