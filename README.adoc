@@ -13,8 +13,8 @@ Mask ActiveRecord/Mongoid data with ease!
 == Introduction
 
 This gem is intended to mask sensitive data so that production database dumps
-can be used in staging or test environments.  It works with Rails 4+ and modern
-Rubies.  It supports Active Record and Mongoid models.
+can be used in staging or test environments.  It works with Rails 4.2+ and
+modern Rubies.  It supports Active Record and Mongoid models.
 
 == Getting started
 
