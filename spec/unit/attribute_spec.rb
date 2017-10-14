@@ -78,8 +78,15 @@ RSpec.describe AttrMasker::Attribute do
 
     it "allows overriding column/field name to be updated with column_name \
       option" do
-      options[:column_name] = :other_attr
+      options[:column_names] = %i[other_attr]
       expect(subject.(model_instance)).to eq({ other_attr: "other" })
+    end
+
+    it "allows specifying more than one column/field name to be updated \
+      with column_name option" do
+      options[:column_names] = %i[some_attr other_attr]
+      expect(subject.(model_instance)).
+        to eq({ some_attr: "new", other_attr: "other" })
     end
     # rubocop:enable Style/BracesAroundHashParameters
   end
