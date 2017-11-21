@@ -10,7 +10,9 @@ module AttrMasker
         # Do not want production environment to be masked!
         #
         if Rails.env.production?
-          raise AttrMasker::Error, "Attempted to run in production environment."
+          unless ENV['FORCE_MASK']
+            raise AttrMasker::Error, "Attempted to run in production environment."
+          end
         end
 
         all_models.each do |klass|
