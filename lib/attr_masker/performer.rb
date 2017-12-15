@@ -10,7 +10,7 @@ module AttrMasker
         # Do not want production environment to be masked!
         #
         if Rails.env.production?
-          unless ENV['FORCE_MASK']
+          unless ENV["FORCE_MASK"]
             raise AttrMasker::Error, "Attempted to run in production environment."
           end
         end

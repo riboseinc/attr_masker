@@ -278,7 +278,7 @@ RSpec.shared_examples "Attr Masker gem feature specs" do
           (or document field)" do
     User.class_eval do
       attr_masker :full_name,
-                  column_names: [:first_name, :last_name],
+                  column_names: %i[first_name last_name],
                   masker: ->(**_) { "(first) (last)" }
 
       def full_name
