@@ -10,6 +10,7 @@ script:
   - bundle exec rspec
 
 rvm:
+  - "2.5"
   - "2.4"
   - "2.3"
   - "ruby-head"
@@ -19,17 +20,17 @@ gemfile:
 
 matrix:
   include:
-    - rvm: "2.4"
+    - rvm: "2.5"
       gemfile: "gemfiles/Rails-head.gemfile"
-    - rvm: "2.4"
+    - rvm: "2.5"
       gemfile: "gemfiles/Rails-5.0.gemfile"
     - rvm: "2.3"
       gemfile: "gemfiles/Rails-4.2.gemfile"
-    - rvm: "2.4"
+    - rvm: "2.5"
       gemfile: "gemfiles/Rails-5.1.gemfile"
       env:
         - WITHOUT_ACTIVE_RECORD: "1"
-    - rvm: "2.4"
+    - rvm: "2.5"
       gemfile: "gemfiles/Rails-5.1.gemfile"
       env:
         - WITHOUT_MONGOID: "1"
