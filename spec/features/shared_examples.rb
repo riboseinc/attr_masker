@@ -176,6 +176,35 @@ RSpec.shared_examples "Attr Masker gem feature specs" do
     )
   end
 
+  example "Using a custom masker with model" do
+    first_name_masker = ->(value:, model:, **_) do
+      value.reverse + model.email
+    end
+
+    last_name_masker = ->(value:, model:, **_) do
+      model.email + value.upcase
+    end
+
+    User.class_eval do
+      attr_masker :first_name, masker: first_name_masker
+      attr_masker :last_name, masker: last_name_masker
+    end
+
+    expect { run_rake_task }.not_to(change { User.count })
+
+    expect { han.reload }.to(
+      change { han.first_name }.to("naHhan@example.test") &
+      change { han.last_name }.to("han@example.testSOLO") &
+      preserve { han.email }
+    )
+
+    expect { luke.reload }.to(
+      change { luke.first_name }.to("ekuLluke@jedi.example.test") &
+      change { luke.last_name }.to("luke@jedi.example.testSKYWALKER") &
+      preserve { luke.email }
+    )
+  end
+
   example "Masked value is assigned via attribute writer" do
     User.class_eval do
       attr_masker :first_name, :last_name
@@ -278,7 +307,7 @@ RSpec.shared_examples "Attr Masker gem feature specs" do
           (or document field)" do
     User.class_eval do
       attr_masker :full_name,
-                  column_names: [:first_name, :last_name],
+                  column_names: %i[first_name last_name],
                   masker: ->(**_) { "(first) (last)" }
 
       def full_name
