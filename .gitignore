@@ -1,6 +1,8 @@
 /.rspec_status
 /.ruby-version
 /.ruby-gemset
+/.rubocop-http--*
+/.rubocop-https--*
 /pkg
 /Gemfile.lock
 /spec/dummy/log/*.log
