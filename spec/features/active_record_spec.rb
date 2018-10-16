@@ -44,6 +44,16 @@ RSpec.describe "Attr Masker gem", :suppress_progressbar do
         delete(user_class_definition)
     end
 
+    # Rails 5.2 seems to reset connection shortly after Combustion gets its job,
+    # causing in-memory database to be dropped.  Hence, schema is loaded
+    # once again here.
+    before(:all) do
+      if defined?(::ActiveRecord::Base)
+        schema_path = File.expand_path("../dummy/db/schema.rb", __dir__)
+        load(schema_path)
+      end
+    end
+
     let(:user_class_definition) { Class.new(ActiveRecord::Base) }
 
     include_examples "Attr Masker gem feature specs"
