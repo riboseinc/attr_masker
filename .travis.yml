@@ -1,10 +1,12 @@
 sudo: false
 dist: trusty
 language: ruby
-before_install: gem install bundler -v 1.15.1
 
 services:
   - mongodb
+
+before_install:
+  - gem install bundler -v 1.15.1
 
 script:
   - bundle exec rspec
