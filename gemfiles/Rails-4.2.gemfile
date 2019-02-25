@@ -1,4 +1,3 @@
-# rubocop:disable Security/Eval
-eval File.read "gemfiles/common.gemfile"
+eval_gemfile "common.gemfile"
 
 gem "activerecord", "~> 4.2.0"
