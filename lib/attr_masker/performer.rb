@@ -17,17 +17,26 @@ module AttrMasker
 
         all_models.each do |klass|
           next if klass.masker_attributes.empty?
+
           mask_class(klass)
         end
       end
 
       private
 
+      # Mask all objects of a class in batches to not run out of memory!
       def mask_class(klass)
         progressbar_for_model(klass) do |bar|
-          klass.all.unscoped.each do |model|
-            mask_object model
-            bar.increment
+          if klass.all.unscoped.respond_to?(:find_each)
+            klass.all.unscoped.find_each(batch_size: 1000) do |model|
+              mask_object model
+              bar.increment
+            end
+          else
+            klass.all.unscoped.each do |model|
+              mask_object model
+              bar.increment
+            end
           end
         end
       end
