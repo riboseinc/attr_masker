@@ -15,4 +15,4 @@ ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile",
 require "rubygems"
 require "bundler/setup"
 
-load Gem.bin_path("rake", "rake")
+load Gem.bin_path("rake", "rake") if File.exists?(Gem.bin_path("rake", "rake"))
