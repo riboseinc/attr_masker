@@ -1,2 +1,2 @@
-WITHOUT_ACTIVE_RECORD = ENV.fetch("WITHOUT_ACTIVE_RECORD", false)
-WITHOUT_MONGOID = ENV.fetch("WITHOUT_MONGOID", false)
+WITHOUT_ACTIVE_RECORD = ENV.fetch("WITHOUT", "") =~ /\bactiverecord\b/
+WITHOUT_MONGOID = ENV.fetch("WITHOUT", "") =~ /\bmongoid\b/
