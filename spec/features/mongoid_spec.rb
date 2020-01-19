@@ -6,7 +6,7 @@ require_relative "shared_examples"
 RSpec.describe "Attr Masker gem", :suppress_progressbar do
   context "when used with Mongoid" do
     before do
-      if ENV["WITHOUT_MONGOID"]
+      if WITHOUT_MONGOID
         expect(defined?(::Mongoid)).to be(nil)
         skip "Mongoid specs disabled with WITHOUT_MONGOID shell variable"
       end
