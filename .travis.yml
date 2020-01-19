@@ -22,9 +22,9 @@ gemfile:
 matrix:
   include:
     - env:
-        - WITHOUT_ACTIVE_RECORD: "1"
+        - WITHOUT: "activerecord"
     - env:
-        - WITHOUT_MONGOID: "1"
+        - WITHOUT: "mongoid"
     - gemfile: "gemfiles/Rails-head.gemfile"
     - gemfile: "gemfiles/Rails-5.2.gemfile"
     - gemfile: "gemfiles/Rails-5.1.gemfile"
