@@ -33,5 +33,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency("rspec", ">= 3.0")
   gem.add_development_dependency("rubocop", "~> 0.54.0")
   gem.add_development_dependency("simplecov")
-  gem.add_development_dependency("sqlite3", "~> 1.3.13")
+  gem.add_development_dependency("sqlite3", ">= 1.3.13", "< 2")
 end
