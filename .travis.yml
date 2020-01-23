@@ -22,19 +22,20 @@ rvm:
   - "ruby-head"
 
 gemfile:
-  - gemfiles/Rails-5.2.gemfile
+  - gemfiles/Rails-6.0.gemfile
 
 matrix:
   include:
     - gemfile: "gemfiles/Rails-head.gemfile"
+    - gemfile: "gemfiles/Rails-5.2.gemfile"
     - gemfile: "gemfiles/Rails-5.1.gemfile"
     - gemfile: "gemfiles/Rails-5.0.gemfile"
     - gemfile: "gemfiles/Rails-4.2.gemfile"
       rvm: "2.3"
-    - gemfile: "gemfiles/Rails-5.2.gemfile"
+    - gemfile: "gemfiles/Rails-6.0.gemfile"
       env:
         - WITHOUT_ACTIVE_RECORD: "1"
-    - gemfile: "gemfiles/Rails-5.2.gemfile"
+    - gemfile: "gemfiles/Rails-6.0.gemfile"
       env:
         - WITHOUT_MONGOID: "1"
 
