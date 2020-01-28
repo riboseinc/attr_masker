@@ -61,11 +61,13 @@ module AttrMasker
 
     def marshal_data(data)
       return data unless options[:marshal]
+
       options[:marshaler].send(options[:dump_method], data)
     end
 
     def unmarshal_data(data)
       return data unless options[:marshal]
+
       options[:marshaler].send(options[:load_method], data)
     end
 

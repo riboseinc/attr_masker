@@ -358,7 +358,7 @@ RSpec.shared_examples "Attr Masker gem feature specs" do
     User.class_eval do
       attr_masker :last_name
 
-      default_scope ->() { where(last_name: "Solo") }
+      default_scope -> { where(last_name: "Solo") }
     end
 
     expect { run_rake_task }.not_to(change { User.unscoped.count })
