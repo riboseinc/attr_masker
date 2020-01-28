@@ -21,6 +21,7 @@ gemfile:
 
 matrix:
   include:
+    - {}
     - env:
         - WITHOUT: "activerecord"
     - env:
