@@ -24,6 +24,8 @@ module AttrMasker
       private
 
       # Mask all objects of a class in batches to not run out of memory!
+      #--
+      # rubocop:todo Metrics/MethodLength
       def mask_class(klass)
         progressbar_for_model(klass) do |bar|
           if klass.all.unscoped.respond_to?(:find_each)
@@ -39,6 +41,7 @@ module AttrMasker
           end
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       # For each masker attribute, mask it, and save it!
       #

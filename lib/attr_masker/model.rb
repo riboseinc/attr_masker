@@ -73,6 +73,8 @@ module AttrMasker
     #   @user.masker_configuration # returns the masker version of configuration
     #
     #   See README for more examples
+    #--
+    # rubocop:disable Metrics/MethodLength
     def attr_masker(*args)
       default_options = {
         if: true,
@@ -94,6 +96,7 @@ module AttrMasker
         masker_attributes[attribute.name] = attribute
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     # Default options to use with calls to <tt>attr_masker</tt>
     # XXX:Keep
