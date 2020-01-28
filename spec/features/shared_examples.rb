@@ -374,3 +374,5 @@ RSpec.shared_examples "Attr Masker gem feature specs" do
     Rake::Task["db:mask"].execute
   end
 end
+
+# rubocop:enable Style/TrailingCommaInArguments
