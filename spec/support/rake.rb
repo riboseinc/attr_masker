@@ -3,4 +3,4 @@
 
 require "rake"
 Rails.application.load_tasks
-load File.expand_path("../../../lib/tasks/db.rake", __FILE__)
+load File.expand_path("../../lib/tasks/db.rake", __dir__)
