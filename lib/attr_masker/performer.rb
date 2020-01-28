@@ -1,8 +1,6 @@
 # (c) 2017 Ribose Inc.
 #
 
-# rubocop:disable Rails/SkipsModelValidations
-
 module AttrMasker
   module Performer
     class Base
@@ -79,9 +77,12 @@ module AttrMasker
         ::ActiveRecord::Base.descendants.select(&:table_exists?)
       end
 
+      #--
+      # rubocop:disable Rails/SkipsModelValidations
       def make_update(instance, updates)
         instance.class.all.unscoped.where(id: instance.id).update_all(updates)
       end
+      # rubocop:enable Rails/SkipsModelValidations
     end
 
     class Mongoid < Base
