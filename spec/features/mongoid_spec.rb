@@ -8,7 +8,7 @@ RSpec.describe "Attr Masker gem", :suppress_progressbar do
     before do
       if WITHOUT_MONGOID
         expect(defined?(::Mongoid)).to be(nil)
-        skip "Mongoid specs disabled with WITHOUT_MONGOID shell variable"
+        skip "Mongoid specs disabled with WITHOUT=mongoid shell variable"
       end
     end
 
