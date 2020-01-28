@@ -15,29 +15,32 @@ script:
 
 rvm:
   - "2.7"
-  - "2.6"
-  - "2.5"
-  - "2.4"
-  - "2.3"
-  - "ruby-head"
 
 gemfile:
   - gemfiles/Rails-6.0.gemfile
 
 matrix:
   include:
+    - env:
+        - WITHOUT_ACTIVE_RECORD: "1"
+    - env:
+        - WITHOUT_MONGOID: "1"
     - gemfile: "gemfiles/Rails-head.gemfile"
     - gemfile: "gemfiles/Rails-5.2.gemfile"
     - gemfile: "gemfiles/Rails-5.1.gemfile"
     - gemfile: "gemfiles/Rails-5.0.gemfile"
     - gemfile: "gemfiles/Rails-4.2.gemfile"
+      # Rails 4.2 doesn't work with newer Rubies.
       rvm: "2.3"
-    - gemfile: "gemfiles/Rails-6.0.gemfile"
-      env:
-        - WITHOUT_ACTIVE_RECORD: "1"
-    - gemfile: "gemfiles/Rails-6.0.gemfile"
-      env:
-        - WITHOUT_MONGOID: "1"
+    - rvm: ruby-head
+    - rvm: 2.6
+    - rvm: 2.5
+    - rvm: 2.4
+      # The latest Rails supported on this Ruby
+      gemfile: "gemfiles/Rails-5.2.gemfile"
+    - rvm: 2.3
+      # The latest Rails supported on this Ruby
+      gemfile: "gemfiles/Rails-5.2.gemfile"
 
   allow_failures:
     - rvm: "ruby-head"
