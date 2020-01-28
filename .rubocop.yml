@@ -12,3 +12,9 @@ AllCops:
 
 Rails:
   Enabled: true
+
+# Hashrocket style looks better when describing task dependencies.
+Style/HashSyntax:
+  Exclude:
+    - Rakefile
+    - "**/*.rake"
