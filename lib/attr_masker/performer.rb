@@ -9,7 +9,8 @@ module AttrMasker
         #
         if Rails.env.production?
           unless ENV["FORCE_MASK"]
-            raise AttrMasker::Error, "Attempted to run in production environment."
+            msg = "Attempted to run in production environment."
+            raise AttrMasker::Error, msg
           end
         end
 
