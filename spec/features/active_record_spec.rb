@@ -38,10 +38,35 @@ RSpec.describe "Attr Masker gem", :suppress_progressbar do
     # fortunately, DescendantsTracker is modified extremely rarely (no changes
     # to AST since 2012), therefore  I expect that this new approach will
     # require much less maintenance than stubbing we did.
+    #
+    # -----
+    # 2020-01
+    #
+    # From Rails 6.0, DescendantsTracker uses weak references, and no longer
+    # blocks garbage collection of anonymous classes.  See:
+    # https://github.com/rails/rails/pull/31442
+    #
+    # However, instances of these classes, which are bound to example life cycle
+    # via #let helpers, also hold the references, hence garbage collection must
+    # be postponed till example life cycle ends.
+    #
+    # Consequently, #after hooks cannot be used, as they are run too early for
+    # this purpose, but fortunately this can be worked around by
+    # before(:example) + after(:all) combo.
     after do
-      ::ActiveSupport::DescendantsTracker.
-        class_variable_get("@@direct_descendants")[::ActiveRecord::Base].
-        delete(user_class_definition)
+      if ::ActiveSupport.gem_version < Gem::Version.new("6.0.0")
+        ::ActiveSupport::DescendantsTracker.
+          class_variable_get("@@direct_descendants")[::ActiveRecord::Base].
+          delete(user_class_definition)
+      end
+    end
+
+    before do
+      GC.start
+    end
+
+    after(:all) do
+      GC.start
     end
 
     # Rails 5.2 seems to reset connection shortly after Combustion gets its job,
