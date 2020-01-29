@@ -14,7 +14,7 @@ RSpec.describe "Attr Masker gem", :suppress_progressbar do
 
     after do
       # Remove the example-specific model from Mongoid.models
-      ::Mongoid.models.delete(user_class_definition)
+      ::Mongoid.models.delete(user_class_definition) if defined?(::Mongoid)
     end
 
     let(:user_class_definition) do
