@@ -51,10 +51,12 @@ RSpec.describe "Attr Masker gem", :suppress_progressbar do
     # this purpose, but fortunately this can be worked around by
     # before(:example) + after(:all) combo.
     after do
-      if ::ActiveSupport.gem_version < Gem::Version.new("6.0.0")
-        ::ActiveSupport::DescendantsTracker.
-          class_variable_get("@@direct_descendants")[::ActiveRecord::Base].
-          delete(user_class_definition)
+      if defined?(::ActiveRecord::Base)
+        if ::ActiveSupport.gem_version < Gem::Version.new("6.0.0")
+          ::ActiveSupport::DescendantsTracker.
+            class_variable_get("@@direct_descendants")[::ActiveRecord::Base].
+            delete(user_class_definition)
+        end
       end
     end
 
