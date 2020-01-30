@@ -50,22 +50,29 @@ RSpec.describe "Attr Masker gem", :suppress_progressbar do
     # Consequently, #after hooks cannot be used, as they are run too early for
     # this purpose, but fortunately this can be worked around by
     # before(:example) + after(:all) combo.
+    #
+    # -----
+    # 2020-01 part 2
+    #
+    # Not really.  Garbage Collector cannot be trusted.  It is not guaranteed
+    # to work consistently in different Ruby versions, and in fact is a cause
+    # of build failures in case of Rails 6.0 on Ruby 2.5.7 when run with
+    # WITHOUT=mongoid environment variable set.
+    #
+    # Therefore, manual sweep is still necessary in Ruby 6+.
     after do
       if defined?(::ActiveRecord::Base)
         if ::ActiveSupport.gem_version < Gem::Version.new("6.0.0")
           ::ActiveSupport::DescendantsTracker.
             class_variable_get("@@direct_descendants")[::ActiveRecord::Base].
             delete(user_class_definition)
+        else
+          ::ActiveSupport::DescendantsTracker.
+            class_variable_get("@@direct_descendants")[::ActiveRecord::Base].
+            instance_variable_get("@refs").
+            delete(user_class_definition)
         end
       end
-    end
-
-    before do
-      GC.start
-    end
-
-    after(:all) do
-      GC.start
     end
 
     # Rails 5.2 seems to reset connection shortly after Combustion gets its job,
