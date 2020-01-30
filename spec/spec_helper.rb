@@ -1,6 +1,23 @@
 # (c) 2017 Ribose Inc.
 #
 
+# Warnings gem must be added to Gemfile or otherwise loaded in order to have
+# the following configuration in effect.
+#
+# TODO: Add Warning to gemspec or Gemfile after dropping support for Ruby 2.3.
+begin
+  require "warning"
+
+  # Deduplicate warnings
+  Warning.dedup
+
+  # Ignore all warnings in Gem dependencies
+  Gem.path.each do |path|
+    Warning.ignore(//, path)
+  end
+rescue LoadError
+end
+
 require "simplecov"
 SimpleCov.start
 
