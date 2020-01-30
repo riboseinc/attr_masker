@@ -1,0 +1,74 @@
+name: Tests
+
+on:
+  - pull_request
+  - push
+
+jobs:
+  test:
+    # Ruby; Gemfile; Without
+    name: |
+      ${{ matrix.ruby }};
+      ${{ matrix.gemfile }};
+      ${{ matrix.without && format('w/o {0}', matrix.without) || 'all' }}
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        ruby:
+          - 2.7
+          - 2.6
+          - 2.5
+          - 2.4
+          - 2.3
+        gemfile:
+          - Rails-6.0
+          - Rails-5.2
+          - Rails-5.1
+          - Rails-5.0
+          - Rails-4.2
+        without:
+          - ~
+          - activerecord
+          - mongoid
+
+        exclude:
+          # Rails 4.2 refuses to install on Ruby 2.7 for some reason;
+          # anyway, it's a weird combination of old Rails and new Ruby
+          - gemfile: Rails-4.2
+            ruby: 2.7
+          # Rails 6.0 requires Ruby 2.5 or above
+          - gemfile: Rails-6.0
+            ruby: 2.3
+          - gemfile: Rails-6.0
+            ruby: 2.4
+
+    env:
+      # For Bundler control variables, refer to:
+      # https://bundler.io/v1.17/bundle_config.html
+      BUNDLE_GEMFILE: ${{ format('gemfiles/{0}.gemfile', matrix.gemfile) }}
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install required software
+        run: |
+          sudo apt-get install -yq libsqlite3-dev mongodb
+
+      - name: Set up Ruby
+        uses: eregon/use-ruby-action@v1.10.0
+        with:
+          ruby-version: ${{ matrix.ruby }}
+
+      - name: Install gems
+        run: |
+          gem install bundler -v 1.17.3
+          bundle install --jobs 4 --retry 3
+
+      - name: Run tests
+        run: bundle exec rspec
+        env:
+          WITHOUT: ${{ matrix.without }}
