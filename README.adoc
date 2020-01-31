@@ -9,7 +9,7 @@ image:https://img.shields.io/gem/v/attr_masker[
 image:https://img.shields.io/travis/riboseinc/attr_masker/master[
 	"Build Status",
 	link="https://travis-ci.org/riboseinc/attr_masker"]
-image:https://img.shields.io/codeclimate/github/riboseinc/attr_masker[
+image:https://img.shields.io/codeclimate/maintainability/riboseinc/attr_masker[
 	"Code Climate",
 	link="https://codeclimate.com/github/riboseinc/attr_masker"]
 image:https://img.shields.io/codecov/c/github/riboseinc/attr_masker[
