@@ -3,6 +3,7 @@
 :pygments-style: native
 :pygments-linenums-mode: inline
 
+ifdef::env-github[]
 image:https://img.shields.io/gem/v/attr_masker[
 	"Gem Version",
 	link="https://rubygems.org/gems/attr_masker"]
@@ -18,6 +19,7 @@ image:https://img.shields.io/codecov/c/github/riboseinc/attr_masker[
 image:https://img.shields.io/badge/documentation-rdoc-informational[
 	"Documentation on RubyDoc.info",
 	link="https://rubydoc.info/gems/attr_masker"]
+endif::[]
 
 Mask ActiveRecord/Mongoid data with ease!
 
