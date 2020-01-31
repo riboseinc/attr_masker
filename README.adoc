@@ -81,7 +81,7 @@ attr_masker :first_name, :if => :tester_user?
 
 The ActiveRecord's `::default_scope` method has no effect on masking.  All
 table records are updated, provided that :if and :unless filters allow that.
-For example, if you're using a Paranoia[https://github.com/rubysherpas/paranoia]
+For example, if you're using a https://github.com/rubysherpas/paranoia[Paranoia]
 gem to soft-delete your data, records marked as deleted will be masked as well.
 
 === Using custom maskers
