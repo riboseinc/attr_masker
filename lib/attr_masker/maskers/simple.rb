@@ -1,11 +1,21 @@
 module AttrMasker
   module Maskers
-    # This default masker simply replaces any value with a fixed string.
+    # +Simple+ masker replaces values with a predefined +(redacted)+ string.
+    # This is a default masker, which is used when no specific +:masker+ is
+    # passed in +attr_masker+ method call.
     #
-    # +opts+ is a Hash with the key :value that gives you the current attribute
-    # value.
+    # @example Would mask "Adam West" as "(redacted)"
+    #   class User < ActiveRecord::Base
+    #     m = AttrMasker::Maskers::Simple.new
+    #     attr_masker :name, :masker => m
+    #   end
     #
+    # @example Would mask "Adam West" as "(redacted)"
+    #   class User < ActiveRecord::Base
+    #     attr_masker :name
+    #   end
     class Simple
+      # Accepts any keyword arguments, but they all are ignored.
       def call(**_opts)
         "(redacted)"
       end
