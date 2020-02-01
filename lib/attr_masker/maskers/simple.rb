@@ -6,7 +6,7 @@ module AttrMasker
     # value.
     #
     class Simple
-      def call(_opts)
+      def call(**_opts)
         "(redacted)"
       end
     end
