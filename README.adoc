@@ -89,28 +89,6 @@ table records are updated, provided that :if and :unless filters allow that.
 For example, if you're using a https://github.com/rubysherpas/paranoia[Paranoia]
 gem to soft-delete your data, records marked as deleted will be masked as well.
 
-=== Using custom maskers
-
-By default, data is masked with `AttrMasker::Maskers::Simple` masker which
-always returns `"(redacted)"` string.  But anything what responds to `#call`
-can be used instead: a lambda, `Method` instance, and more.  You can specify it
-by setting the `:masker` option.
-
-For instance, you may want to use https://github.com/ffaker/ffaker[ffaker] or
-https://github.com/skalee/well_read_faker[Well Read Faker] to generate random
-replacement values:
-
-[source,ruby]
-----
-require "ffaker"
-
-attr_masker :first_name, :masker => ->(_hash) { FFaker::Name.first_name }
-----
-
-A hash is passed as an argument, which includes some information about the
-record being masked and the attribute value.  It can be used to further
-customize masker's behaviour.
-
 === Built-in maskers
 
 Attr Masker comes with several built-in maskers.
@@ -153,6 +131,37 @@ attr_masker :phone, :masker => rm
 ----
 +
 Would mask "123-456-7890" as "XXX-XXX-XXXX".
+
+=== Using custom maskers
+
+Apart from built-in maskers, any object which responds to `#call` can be used,
+e.g. some lambda or `Method` instance.  For instance, you may want to produce
+unique values basing on other attributes, to mask selectively, or to use
+tool like https://github.com/skalee/well_read_faker[Well Read Faker] to
+generate random replacement values:
+
+[source,ruby]
+----
+require "well_read_faker"
+
+attr_masker :email, masker: ->(model:, **) { "user#{model.id}@example.com" }
+attr_masker :phone, masker: ->(value:, **) { "******" + value[-3..-1] }
+attr_masker :bio, masker: ->(**) { WellReadFaker.paragraph }
+----
+
+Masker is called with following keyword arguments:
+
+`value`:: Original value of the field which is about to be masked
+
+`model`:: Model instance
+
+`attribute_name`:: Name of the attribute which is about to be masked
+
+`masking_options`:: Hash of options which were passed in `#attr_masker` call
+
+This list is likely to be extended in future versions, and that will not be
+considered a breaking change, therefore it is strongly recommended to always
+use a splat (`**`) at end of argument list of masker's `#call` method.
 
 == Roadmap & TODOs
 - documentation
