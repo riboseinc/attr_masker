@@ -164,6 +164,7 @@ considered a breaking change, therefore it is strongly recommended to always
 use a splat (`**`) at end of argument list of masker's `#call` method.
 
 == Roadmap & TODOs
+
 - documentation
 - spec tests
 - Make the `Rails.env` (in which `db:mask` could be run) configurable
