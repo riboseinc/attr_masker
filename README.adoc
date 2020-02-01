@@ -91,7 +91,7 @@ gem to soft-delete your data, records marked as deleted will be masked as well.
 
 === Using custom maskers
 
-By default, data is maksed with `AttrMasker::Maskers::Simple` masker which
+By default, data is masked with `AttrMasker::Maskers::Simple` masker which
 always returns `"(redacted)"` string.  But anything what responds to `#call`
 can be used instead: a lambda, `Method` instance, and more.  You can specify it
 by setting the `:masker` option.
@@ -141,7 +141,7 @@ Can be initialized with options.
 |===============================================================================
 |Name|Default|Description
 |`replacement`|`"*"`|Replacement string, can be empty.
-|`alphanum_only`|`false`|When true, only alphanumeric charaters are replaced.
+|`alphanum_only`|`false`|When true, only alphanumeric characters are replaced.
 |===============================================================================
 +
 Example:
