@@ -13,7 +13,7 @@ module AttrMasker
     end
 
     # Evaluates the +:if+ and +:unless+ attribute options on given instance.
-    # Returns +true+ or +fasle+, depending on whether the attribute should be
+    # Returns +true+ or +false+, depending on whether the attribute should be
     # masked for this object or not.
     def should_mask?(model_instance)
       not (
