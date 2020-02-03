@@ -55,6 +55,40 @@ RSpec.describe AttrMasker::Attribute do
     end
   end
 
+  describe "mask" do
+    subject { described_class.instance_method :mask }
+    let(:receiver) { described_class.new :some_attr, :some_model, options }
+    let(:model_instance) { Struct.new(:some_attr).new("value") }
+    let(:options) { { masker: masker } }
+    let(:masker) { ->(**) { "masked_value" } }
+
+    it "takes the instance.options[:masker] and calls it" do
+      expect(masker).to receive(:call)
+      subject.bind(receiver).call(model_instance)
+    end
+
+    it "passes the unmarshalled attribute value to the masker" do
+      expect(receiver).to receive(:unmarshal_data).
+        with("value").and_return("unmarshalled_value")
+      expect(masker).to receive(:call).
+        with(hash_including(value: "unmarshalled_value"))
+      subject.bind(receiver).call(model_instance)
+    end
+
+    it "passes the model instance to the masker" do
+      expect(masker).to receive(:call).
+        with(hash_including(model: model_instance))
+      subject.bind(receiver).call(model_instance)
+    end
+
+    it "marshals the masked value, and assigns it to the attribute" do
+      expect(receiver).to receive(:marshal_data).
+        with("masked_value").and_return("marshalled_masked_value")
+      subject.bind(receiver).call(model_instance)
+      expect(model_instance.some_attr).to eq("marshalled_masked_value")
+    end
+  end
+
   describe "#masked_attributes_new_values" do
     subject { receiver.method :masked_attributes_new_values }
     let(:receiver) { described_class.new :some_attr, :some_model, options }
