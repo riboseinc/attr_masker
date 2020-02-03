@@ -81,6 +81,18 @@ RSpec.describe AttrMasker::Attribute do
       subject.bind(receiver).call(model_instance)
     end
 
+    it "passes the attribute name to the masker" do
+      expect(masker).to receive(:call).
+        with(hash_including(attribute_name: :some_attr))
+      subject.bind(receiver).call(model_instance)
+    end
+
+    it "passes the masking options to the masker" do
+      expect(masker).to receive(:call).
+        with(hash_including(masking_options: options))
+      subject.bind(receiver).call(model_instance)
+    end
+
     it "marshals the masked value, and assigns it to the attribute" do
       expect(receiver).to receive(:marshal_data).
         with("masked_value").and_return("marshalled_masked_value")
