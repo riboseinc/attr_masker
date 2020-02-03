@@ -35,7 +35,8 @@ module AttrMasker
     def mask(model_instance)
       value = unmarshal_data(model_instance.send(name))
       masker = options[:masker]
-      masker_value = masker.call(value: value, model: model_instance, **options)
+      masker_value = masker.call(value: value, model: model_instance,
+                                 attribute_name: name, masking_options: options)
       model_instance.send("#{name}=", marshal_data(masker_value))
     end
 
