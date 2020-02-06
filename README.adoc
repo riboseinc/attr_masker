@@ -7,9 +7,9 @@ ifdef::env-github[]
 image:https://img.shields.io/gem/v/attr_masker[
 	"Gem Version",
 	link="https://rubygems.org/gems/attr_masker"]
-image:https://img.shields.io/travis/riboseinc/attr_masker/master[
+image:https://img.shields.io/github/workflow/status/riboseinc/attr_masker/Tests[
 	"Build Status",
-	link="https://travis-ci.org/riboseinc/attr_masker"]
+	link="https://github.com/riboseinc/attr_masker/actions"]
 image:https://img.shields.io/codeclimate/maintainability/riboseinc/attr_masker[
 	"Code Climate",
 	link="https://codeclimate.com/github/riboseinc/attr_masker"]
