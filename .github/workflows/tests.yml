@@ -52,7 +52,7 @@ jobs:
       BUNDLE_GEMFILE: ${{ format('gemfiles/{0}.gemfile', matrix.gemfile) }}
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Install required software
         run: |
@@ -62,7 +62,7 @@ jobs:
           sudo apt-get install -yq libsqlite3-dev mongodb
 
       - name: Set up Ruby
-        uses: eregon/use-ruby-action@v1.10.0
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
 
