@@ -69,6 +69,8 @@ jobs:
       - name: Install gems
         run: |
           gem install bundler -v 1.17.3
+          gem uninstall bundler -v '> 1.17.3' || :
+          rm $(gem environment | grep -- '- INSTAL' | sed -e 's/^.*: //')/specifications/default/bundler-2* || :
           bundle install --jobs 4 --retry 3
 
       - name: Run tests
