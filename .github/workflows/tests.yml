@@ -69,6 +69,8 @@ jobs:
       - name: Install gems
         run: |
           gem install bundler -v 1.17.3
+          gem uninstall bundler -v '> 1.17.3'
+          gem info bundler # XXX: debug
           bundle install --jobs 4 --retry 3
 
       - name: Run tests
