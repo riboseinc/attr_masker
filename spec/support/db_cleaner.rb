@@ -3,6 +3,7 @@ require "database_cleaner"
 RSpec.configure do |config|
   config.before(:suite) do
     unless WITHOUT_ACTIVE_RECORD
+      require "database_cleaner-active_record"
       DatabaseCleaner[:active_record].strategy = :truncation
     end
 
@@ -10,6 +11,7 @@ RSpec.configure do |config|
     # to list them and to determine collection names to be cleaned.
     # Therefore, they are specified explicitly here.
     unless WITHOUT_MONGOID
+      require "database_cleaner-mongoid"
       DatabaseCleaner[:mongoid].strategy = :truncation, { only: "users" }
     end
 
