@@ -23,7 +23,6 @@ jobs:
           - 2.6
           - 2.5
           - 2.4
-          - 2.3
         gemfile:
           - Rails-6.0
           - Rails-5.2
@@ -41,8 +40,6 @@ jobs:
           - gemfile: Rails-4.2
             ruby: 2.7
           # Rails 6.0 requires Ruby 2.5 or above
-          - gemfile: Rails-6.0
-            ruby: 2.3
           - gemfile: Rails-6.0
             ruby: 2.4
 
