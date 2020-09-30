@@ -7,7 +7,7 @@ require "attr_masker/version"
 
 Gem::Specification.new do |gem|
   gem.name              = "attr_masker"
-  gem.version           = AttrMasker::Version.string
+  gem.version           = AttrMasker::VERSION
   gem.authors           = ["Ribose Inc."]
   gem.email             = ["open.source@ribose.com"]
   gem.homepage          = "https://github.com/riboseinc/attr_masker"
