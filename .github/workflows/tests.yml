@@ -48,6 +48,11 @@ jobs:
       # https://bundler.io/v1.17/bundle_config.html
       BUNDLE_GEMFILE: ${{ format('gemfiles/{0}.gemfile', matrix.gemfile) }}
 
+      # Rails 4.2 requires Bundler 1.x.
+      # BUNDLE_ALLOW_BUNDLER_DEPENDENCY_CONFLICTS overrides that requirement.
+      # See: https://bundler.io/v2.1/man/bundle-config.1.html
+      BUNDLE_ALLOW_BUNDLER_DEPENDENCY_CONFLICTS: 1
+
     steps:
       - uses: actions/checkout@v2
 
@@ -63,12 +68,11 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
 
+      - name: Install Bundler
+        run: gem install bundler
+
       - name: Install gems
-        run: |
-          gem install bundler -v 1.17.3
-          gem uninstall bundler -v '> 1.17.3' || :
-          rm $(gem environment | grep -- '- INSTAL' | sed -e 's/^.*: //')/specifications/default/bundler-2* || :
-          bundle install --jobs 4 --retry 3
+        run: bundle install --jobs 4 --retry 3
 
       - name: Run tests
         run: bundle exec rspec
