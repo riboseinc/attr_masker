@@ -2,9 +2,11 @@ require "database_cleaner"
 
 RSpec.configure do |config|
   config.before(:suite) do
+    strategy = :truncation
+
     unless WITHOUT_ACTIVE_RECORD
       require "database_cleaner-active_record"
-      DatabaseCleaner[:active_record].strategy = :truncation
+      DatabaseCleaner[:active_record].strategy = strategy
     end
 
     # Since models are defined dynamically in specs, Database Cleaner is unable
@@ -12,10 +14,18 @@ RSpec.configure do |config|
     # Therefore, they are specified explicitly here.
     unless WITHOUT_MONGOID
       require "database_cleaner-mongoid"
-      DatabaseCleaner[:mongoid].strategy = :truncation, { only: "users" }
+
+      strategy =
+        if Gem::Version.new(DatabaseCleaner::Mongoid::VERSION) >= Gem::Version.new("2.0.0")
+          :deletion
+        else
+          :truncation
+        end
+
+      DatabaseCleaner[:mongoid].strategy = strategy, { only: ["users"] }
     end
 
-    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.clean_with(strategy)
   end
 
   config.around(:each) do |example|
