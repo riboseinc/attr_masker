@@ -68,11 +68,15 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
 
+      - name: Prepare to install gems for Rails 4.2
+        run: echo BUNDLER_VERSION_OVERRIDE=1.17.3 >> $GITHUB_ENV
+        if: matrix.gemfile == 'Rails-4.2'
+
       - name: Install Bundler
-        run: gem install bundler
+        run: gem install bundler ${BUNDLER_VERSION_OVERRIDE+-v ${BUNDLER_VERSION_OVERRIDE}}
 
       - name: Install gems
-        run: bundle install --jobs 4 --retry 3
+        run: bundle ${BUNDLER_VERSION_OVERRIDE+_${BUNDLER_VERSION_OVERRIDE}_} install --jobs 4 --retry 3
 
       - name: Run tests
         run: bundle exec rspec
