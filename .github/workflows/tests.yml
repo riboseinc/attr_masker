@@ -35,6 +35,11 @@ jobs:
           - activerecord
           - mongoid
 
+        include:
+          # Rails 4.2 requires Bundler 1.x.
+          - gemfile: Rails-4.2
+            bundler_version: "1.17"
+
         exclude:
           # Rails 4.2 refuses to install on Ruby 2.7 for some reason;
           # anyway, it's a weird combination of old Rails and new Ruby
@@ -68,9 +73,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-
-      - name: Install Bundler
-        run: gem install bundler
+          bundler: ${{ matrix.bundler_version || '2' }}
 
       - name: Install gems
         run: bundle install --jobs 4 --retry 3
