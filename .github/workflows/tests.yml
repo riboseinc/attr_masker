@@ -69,9 +69,7 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler: ${{ matrix.bundler_version || '2' }}
-
-      - name: Install gems
-        run: bundle install --jobs 4 --retry 3
+          bundler-cache: true
 
       - name: Run tests
         run: bundle exec rspec
