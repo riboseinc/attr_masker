@@ -1,0 +1,3 @@
+eval_gemfile "common.gemfile"
+
+gem "activerecord", "~> 6.1.0"

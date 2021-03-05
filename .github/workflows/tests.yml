@@ -25,6 +25,7 @@ jobs:
           - 2.5
           - 2.4
         gemfile:
+          - Rails-6.1
           - Rails-6.0
           - Rails-5.2
           - Rails-5.1
@@ -45,7 +46,9 @@ jobs:
           # anyway, it's a weird combination of old Rails and new Ruby
           - gemfile: Rails-4.2
             ruby: 2.7
-          # Rails 6.0 requires Ruby 2.5 or above
+          # Rails 6 requires Ruby 2.5 or above
+          - gemfile: Rails-6.1
+            ruby: 2.4
           - gemfile: Rails-6.0
             ruby: 2.4
 
