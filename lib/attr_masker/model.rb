@@ -1,3 +1,6 @@
+# (c) 2017 Ribose Inc.
+#
+
 module AttrMasker
   module Model
     def self.extended(base) # :nodoc:

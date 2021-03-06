@@ -1,5 +1,6 @@
 # (c) 2017 Ribose Inc.
 #
+
 module AttrMasker
   module Maskers
     # +Replacing+ masker replaces every character of string which is being

@@ -1,3 +1,6 @@
+# (c) 2017 Ribose Inc.
+#
+
 module AttrMasker
   module Maskers
     # +Simple+ masker replaces values with a predefined +(redacted)+ string.
