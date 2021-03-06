@@ -20,11 +20,11 @@ jobs:
       max-parallel: 10
       matrix:
         ruby:
-          - 3.0
-          - 2.7
-          - 2.6
-          - 2.5
-          - 2.4
+          - "3.0"
+          - "2.7"
+          - "2.6"
+          - "2.5"
+          - "2.4"
         gemfile:
           - Rails-6.1
           - Rails-6.0
@@ -45,23 +45,23 @@ jobs:
         exclude:
           # Rails 4.2 refuses to install on Ruby 2.7 and newer.
           - gemfile: Rails-4.2
-            ruby: 3.0
+            ruby: "3.0"
           - gemfile: Rails-4.2
-            ruby: 2.7
+            ruby: "2.7"
           # Rails 5.x won't work with Ruby 3.0 and newer.  See:
           # - https://github.com/rails/rails/issues/40938#issuecomment-751569171
           # - https://weblog.rubyonrails.org/2020/5/6/Rails-6-0-3-has-been-released/
           - gemfile: Rails-5.2
-            ruby: 3.0
+            ruby: "3.0"
           - gemfile: Rails-5.1
-            ruby: 3.0
+            ruby: "3.0"
           - gemfile: Rails-5.0
-            ruby: 3.0
+            ruby: "3.0"
           # Rails 6 requires Ruby 2.5 or above
           - gemfile: Rails-6.1
-            ruby: 2.4
+            ruby: "2.4"
           - gemfile: Rails-6.0
-            ruby: 2.4
+            ruby: "2.4"
 
     env:
       # For Bundler control variables, refer to:
