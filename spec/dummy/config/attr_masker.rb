@@ -1,0 +1,1 @@
+$CONFIG_LOADED_AT = Time.now

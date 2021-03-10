@@ -15,6 +15,9 @@ namespace :db do
   task :mask => :environment do
     Rails.application.eager_load!
 
+    config_file = Rails.root.join("config", "attr_masker.rb").to_s
+    require config_file if File.file?(config_file)
+
     performers = AttrMasker::Performer::Base.descendants.map(&:new)
     performers.select!(&:dependencies_available?)
 
