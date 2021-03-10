@@ -370,6 +370,10 @@ RSpec.shared_examples "Attr Masker gem feature specs" do
     end
   end
 
+  example "It loads configuration file", :force_config_file_reload do
+    expect { run_rake_task }.to change { $CONFIG_LOADED_AT }
+  end
+
   def run_rake_task
     Rake::Task["db:mask"].execute
   end
