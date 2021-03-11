@@ -163,6 +163,26 @@ This list is likely to be extended in future versions, and that will not be
 considered a breaking change, therefore it is strongly recommended to always
 use a splat (`**`) at end of argument list of masker's `#call` method.
 
+=== Configuration file
+
+It is also possible to contain all the maskers configuration in one file.
+Just place it in `config/attr_masker.rb`, and it will be loaded from a Rake
+task after the application is fully loaded.  That means you can re-open classes
+and add masker definitions there, for example:
+
+[source,ruby]
+----
+# config/attr_masker.rb
+
+class User
+  attr_masker :first_name, :last_name
+end
+
+class Email
+  attr_masker :address, ->(model:, **) { "mail#{model.id}@example.com" }
+end
+----
+
 == Roadmap & TODOs
 
 - documentation
