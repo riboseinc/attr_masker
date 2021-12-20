@@ -26,6 +26,7 @@ jobs:
           - "2.5"
           - "2.4"
         gemfile:
+          - Rails-7.0
           - Rails-6.1
           - Rails-6.0
           - Rails-5.2
@@ -62,6 +63,12 @@ jobs:
             ruby: "2.4"
           - gemfile: Rails-6.0
             ruby: "2.4"
+          - gemfile: Rails-7.0
+            ruby: "2.4"
+          - gemfile: Rails-7.0
+            ruby: "2.5"
+          - gemfile: Rails-7.0
+            ruby: "2.6"
 
     env:
       # For Bundler control variables, refer to:
