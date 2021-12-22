@@ -17,7 +17,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      max-parallel: 10
+      max-parallel: 5
       matrix:
         ruby:
           - "3.0"
@@ -80,6 +80,10 @@ jobs:
 
       - name: Install required software
         run: |
+          sudo apt-get update
+          sudo apt-get purge mongo-tools*
+          sudo apt-get purge mongodb-mongosh*
+          sudo apt-get purge mongodb-database-tools
           sudo apt-get install -yq libsqlite3-dev mongodb
 
       - name: Set up Ruby

@@ -26,18 +26,23 @@ Mask ActiveRecord/Mongoid data with ease!
 == Introduction
 
 This gem is intended to mask sensitive data so that production database dumps
-can be used in staging or test environments.  It works with Rails 4.2+ and
-modern Rubies.  It supports Active Record and Mongoid models.
+can be used in staging or test environments.
+
+* Works with Rails 4.2+ and modern Rubies
+* Supports ActiveRecord and Mongoid models
+
 
 == Usage instructions
 
 === Installation
 
-Add attr_masker to your gemfile:
+Add `attr_masker` to your `Gemfile`:
 
 [source,ruby]
 ----
-  gem "attr_masker", github: "riboseinc/attr_masker"
+gem "attr_masker"
+# or the HEAD version of the gem
+# gem "attr_masker", github: "riboseinc/attr_masker"
 ----
 
 
@@ -45,7 +50,7 @@ Then install the gem:
 
 [source,sh]
 ----
-  bundle install
+bundle install
 ----
 
 === Basic usage
@@ -54,9 +59,9 @@ In your models, define attributes which should be masked:
 
 [source,ruby]
 ----
-  class User
-    attr_masker :email, :first_name, :last_name
-  end
+class User
+  attr_masker :email, :first_name, :last_name
+end
 ----
 
 Then, when you want to mask the data, run the `db:mask` Rake task in some
@@ -64,7 +69,7 @@ Rails environment other than production, for example:
 
 [source,sh]
 ----
-  bundle exec rake db:mask RAILS_ENV=staging
+bundle exec rake db:mask RAILS_ENV=staging
 ----
 
 WARNING: Data are destructively overwritten.  Run `rake db:mask` with care!
@@ -85,52 +90,56 @@ attr_masker :first_name, :if => :tester_user?
 ----
 
 The ActiveRecord's `::default_scope` method has no effect on masking.  All
-table records are updated, provided that :if and :unless filters allow that.
-For example, if you're using a https://github.com/rubysherpas/paranoia[Paranoia]
-gem to soft-delete your data, records marked as deleted will be masked as well.
+table records are updated, provided that `:if` and `:unless` filters allow that.
+For example, if you're soft-deleting your data (with a gem like
+https://github.com/rubysherpas/paranoia[Paranoia]), records marked as deleted
+will be masked as well.
 
 === Built-in maskers
 
 Attr Masker comes with several built-in maskers.
 
-`AttrMasker::Maskers::Simple`::
-+
+==== `AttrMasker::Maskers::Simple`
+
 Simply replaces any value with the `"(redacted)"`.  Only useful for columns
 containing textual data.
-+
+
 This is a default masker.  It is used when `:masker` option is unspecified.
-+
-Example:
-+
+
+[example]
+====
 [source,ruby]
 ----
 attr_masker :first_name
 attr_masker :last_name, :masker => AttrMasker::Maskers::Simple.new
 ----
-+
-Would set both `first_name` and `last_name` attributes to `"(redacted)"`.
 
-`AttrMasker::Maskers::Replacing`::
-+
+Would set both `first_name` and `last_name` attributes to `"(redacted)"`.
+====
+
+==== `AttrMasker::Maskers::Replacing`
+
 Replaces characters with some masker string (single asterisk by default).
 Can be initialized with options.
-+
+
 [options="header"]
-|===============================================================================
+|===
 |Name|Default|Description
+
 |`replacement`|`"*"`|Replacement string, can be empty.
 |`alphanum_only`|`false`|When true, only alphanumeric characters are replaced.
-|===============================================================================
-+
-Example:
-+
+|===
+
+[example]
+====
 [source,ruby]
 ----
 rm = AttrMasker::Maskers::Replacing.new(character: "X", alphanum_only: true)
 attr_masker :phone, :masker => rm
 ----
-+
-Would mask "123-456-7890" as "XXX-XXX-XXXX".
+
+Would mask `"123-456-7890"` as `"XXX-XXX-XXXX"`.
+====
 
 === Using custom maskers
 
@@ -196,7 +205,7 @@ end
 ** structured *Object* preserving algorithms
 *** _i.e._ generalization of the above HTML scenario
 - I18n of the default `"(redacted)"` phrase
-- …
+- ...
 
 == Acknowledgements
 
