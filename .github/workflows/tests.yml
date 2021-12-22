@@ -73,9 +73,10 @@ jobs:
 
       - name: Install required software
         run: |
-          sudo apt remove mongodb-org
-          sudo apt purge mongodb-org
-          sudo apt autoremove
+          sudo apt-get update
+          sudo apt-get purge mongo-tools*
+          sudo apt-get purge mongodb-mongosh*
+          sudo apt-get purge mongodb-database-tools
           sudo apt-get install -yq libsqlite3-dev mongodb
 
       - name: Set up Ruby
