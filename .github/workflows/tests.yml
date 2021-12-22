@@ -32,16 +32,10 @@ jobs:
           - Rails-5.2
           - Rails-5.1
           - Rails-5.0
-          - Rails-4.2
         without:
           - ~
           - activerecord
           - mongoid
-
-        include:
-          # Rails 4.2 requires Bundler 1.x.
-          - gemfile: Rails-4.2
-            bundler_version: "1.17"
 
         exclude:
           # Rails 4.2 refuses to install on Ruby 2.7 and newer.
